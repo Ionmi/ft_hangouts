@@ -3,8 +3,8 @@
     "name": "ft_hangouts",
     "slug": "ft_hangouts",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "orientation": "default",
+    "icon": "./assets/images/42.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,21 +13,21 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/42.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/42.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/42.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -39,3 +39,4 @@
     }
   }
 }
+
