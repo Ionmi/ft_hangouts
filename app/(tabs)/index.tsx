@@ -18,10 +18,9 @@ export default function HomeScreen() {
 
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Agenda</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ChangeColorButton />
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
