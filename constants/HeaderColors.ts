@@ -4,10 +4,10 @@
  */
 
 export const HeaderColorPairs: { light: string; dark: string }[] = [
-  { light: '#A1CEDC', dark: '#1D3D47' },
-  { light: '#F5A623', dark: '#4A2F0B' },
-  { light: '#50E3C2', dark: '#00332C' },
-  { light: '#B8E986', dark: '#3A4A1F' },
-  { light: '#9013FE', dark: '#2E004B' },
-  { light: '#FF0080', dark: '#4B002E' }
+  { light: '#A1CEDC', dark: '#A1CEDC' },
+  { light: '#F5A623', dark: '#F5A623' },
+  { light: '#50E3C2', dark: '#50E3C2' },
+  { light: '#B8E986', dark: '#B8E986' },
+  { light: '#9013FE', dark: '#9013FE' },
+  { light: '#FF0080', dark: '#FF0080' }
 ]
