@@ -8,9 +8,11 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { HeaderStyleProvider } from '@/contexts/HeaderStyleContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useLanguage();
 
   return (
     <HeaderStyleProvider>
@@ -46,7 +48,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="settings"
           options={{
-            title: 'Settings',
+            title: t('settings'),
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="gear" color={color} />,
           }}
         />
