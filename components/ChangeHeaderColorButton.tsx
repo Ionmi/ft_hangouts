@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { useHeaderStyle } from '@/contexts/HeaderStyleContext';
+import { useAccentStyle } from '@/contexts/HeaderStyleContext';
 import { HeaderColorPairs } from '@/constants/HeaderColors';
 import { IconSymbol } from './ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from 'react-native';
 
 const ChangeColorButton = () => {
-    const { backgroundColor, setBackgroundColor } = useHeaderStyle();
+    const { color: backgroundColor, setColor: setBackgroundColor } = useAccentStyle();
     const colorScheme = useColorScheme() ?? 'light';
     const iconColor = useThemeColor({}, 'text');
 

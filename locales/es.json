@@ -4,5 +4,6 @@
   "customize_settings": "Personaliza la configuración de tu aplicación aquí",
   "change_header_color": "Cambia el color del encabezado",
   "pick_language": "Selecciona tu idioma",
-  "welcome_message": "¡Bienvenido a la aplicación!"
+  "welcome_message": "¡Bienvenido a la aplicación!",
+  "contacts": "Contactos"
 }

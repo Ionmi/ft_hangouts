@@ -4,13 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface HeaderStyleContextType {
-  backgroundColor: { light: string; dark: string };
-  setBackgroundColor: React.Dispatch<React.SetStateAction<{ light: string; dark: string }>>;
+  color: { light: string; dark: string };
+  setColor: React.Dispatch<React.SetStateAction<{ light: string; dark: string }>>;
 }
 
 const defaultContextValue: HeaderStyleContextType = {
-  backgroundColor: HeaderColorPairs[0],
-  setBackgroundColor: () => { },
+  color: HeaderColorPairs[0],
+  setColor: () => { },
 };
 
 const HeaderStyleContext = createContext<HeaderStyleContextType>(defaultContextValue);
@@ -20,14 +20,14 @@ interface HeaderStyleProviderProps {
 }
 
 export const HeaderStyleProvider: React.FC<HeaderStyleProviderProps> = ({ children }) => {
-  const [backgroundColor, setBackgroundColor] = useState(defaultContextValue.backgroundColor);
+  const [color, setColor] = useState(defaultContextValue.color);
 
   useEffect(() => {
     const loadBackgroundColor = (async () => {
       try {
         const storedColor = await AsyncStorage.getItem('backgroundColor');
         if (storedColor) {
-          setBackgroundColor(JSON.parse(storedColor));
+          setColor(JSON.parse(storedColor));
         }
       } catch (error) {
         console.error('Failed to load background color:', error);
@@ -40,20 +40,20 @@ export const HeaderStyleProvider: React.FC<HeaderStyleProviderProps> = ({ childr
   useEffect(() => {
     const saveBackgroundColor = async () => {
       try {
-        await AsyncStorage.setItem('backgroundColor', JSON.stringify(backgroundColor));
+        await AsyncStorage.setItem('backgroundColor', JSON.stringify(color));
       } catch (error) {
         console.error('Failed to save background color:', error);
       }
     };
 
     saveBackgroundColor();
-  }, [backgroundColor]);
+  }, [color]);
 
   return (
-    <HeaderStyleContext.Provider value={{ backgroundColor, setBackgroundColor }}>
+    <HeaderStyleContext.Provider value={{ color: color, setColor: setColor }}>
       {children}
     </HeaderStyleContext.Provider>
   );
 };
 
-export const useHeaderStyle = () => useContext(HeaderStyleContext);
+export const useAccentStyle = () => useContext(HeaderStyleContext);

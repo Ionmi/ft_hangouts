@@ -2,8 +2,8 @@
   "title": "Hello World",
   "settings": "Settings",
   "customize_settings": "Customize your app settings here",
-  "change_color": "Change Color",
   "change_header_color": "Change the header color",
   "pick_language": "Pick your language",
-  "welcome_message": "Welcome to the app!"
+  "welcome_message": "Welcome to the app!",
+  "contacts": "Contacts"
 }
