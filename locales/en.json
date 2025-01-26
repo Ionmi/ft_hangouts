@@ -6,5 +6,7 @@
   "pick_language": "Pick your language",
   "welcome_message": "Welcome to the app!",
   "contacts": "Contacts",
-  "home": "Home"
+  "home": "Home",
+  "fillAllFields": "All fields are required.",
+  "invalidPhone": "Invalid phone number.\nIt should contain only numbers and be between 10 and 15 digits."
 }

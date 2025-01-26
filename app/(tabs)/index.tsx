@@ -1,21 +1,44 @@
-import { Image, StyleSheet, Platform, useColorScheme } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, Modal, View } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useLanguage } from '../../contexts/LanguageContext';
-
-import { useThemeColor } from '../../hooks/useThemeColor';
-import FilledButton from '../../components/ui/FilledButton';
 import { useAccentStyle } from '../../contexts/HeaderStyleContext';
 import Button from '../../components/ui/Button';
 import { IconSymbol } from '../../components/ui/IconSymbol';
+import ContactForm from '../../components/ContactForm';
+import { Contact } from '../../types/Contact';
+import { createContactsTable, getContacts, saveContact } from '../../db/sqliteService';
 
 export default function HomeScreen() {
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const { t } = useLanguage();
-  const { colors: color } = useAccentStyle();
-  const colorScheme = useColorScheme() ?? 'light';
+  const { color } = useAccentStyle();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    loadContacts();
+  }, []);
+  
+  const loadContacts = async () => {
+    await createContactsTable();
+    const data = await getContacts();
+    setContacts(data);
+  };
+
+
+  const handleFormSubmit = async (contact: Contact) => {
+    try {
+      // await saveContact(contact);
+      setContacts([...contacts, contact]);
+      setModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <ParallaxScrollView
       headerImage={
@@ -24,18 +47,24 @@ export default function HomeScreen() {
           style={styles.ftLogo}
         />
       }
-
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("contacts")}</ThemedText>
         <HelloWave />
         <ThemedView style={{ flex: 1 }} />
-        <Button
-          onPress={() => { }}>
-          <IconSymbol name='plus' size={24} color={color[colorScheme]} />
+        <Button onPress={() => setModalVisible(true)}>
+          <IconSymbol name='plus' size={24} color={color} />
         </Button>
       </ThemedView>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <ContactForm onSubmit={handleFormSubmit} onCancel={() => setModalVisible(false)} />
+      </Modal>
     </ParallaxScrollView>
   );
 }
@@ -44,7 +73,6 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
     gap: 8,
   },
   stepContainer: {
@@ -58,4 +86,5 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+
 });
