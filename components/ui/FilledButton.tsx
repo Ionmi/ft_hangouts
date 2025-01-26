@@ -15,7 +15,7 @@ const FilledButton = ({
     style,
     onPress,
 }: Props) => {
-    const { color: backgroundColor } = useAccentStyle();
+    const { colors: backgroundColor } = useAccentStyle();
     const colorScheme = useColorScheme() ?? 'light';
 
     return (

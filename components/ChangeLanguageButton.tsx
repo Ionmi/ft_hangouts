@@ -9,7 +9,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const ChangeLanguageButton = () => {
     const { language, setLanguage } = useLanguage();
-    const { color: backgroundColor } = useAccentStyle();
+    const { colors: backgroundColor } = useAccentStyle();
     const colorScheme = useColorScheme() ?? 'light';
     const iconColor = useThemeColor({}, 'text');
 

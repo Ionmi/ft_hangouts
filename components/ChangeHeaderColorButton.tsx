@@ -7,7 +7,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from 'react-native';
 
 const ChangeColorButton = () => {
-    const { color: backgroundColor, setColor: setBackgroundColor } = useAccentStyle();
+    const { colors: backgroundColor, setColor: setBackgroundColor } = useAccentStyle();
     const colorScheme = useColorScheme() ?? 'light';
     const iconColor = useThemeColor({}, 'text');
 

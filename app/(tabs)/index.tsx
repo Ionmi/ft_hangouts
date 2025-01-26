@@ -14,7 +14,7 @@ import { IconSymbol } from '../../components/ui/IconSymbol';
 
 export default function HomeScreen() {
   const { t } = useLanguage();
-  const { color } = useAccentStyle();
+  const { colors: color } = useAccentStyle();
   const colorScheme = useColorScheme() ?? 'light';
   return (
     <ParallaxScrollView

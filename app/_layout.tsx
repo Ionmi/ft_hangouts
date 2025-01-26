@@ -10,6 +10,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import TooltipAlert from '../components/TooltipAlert';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,16 +33,18 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <LanguageProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <TooltipAlert />
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </LanguageProvider>
+      <HeaderStyleProvider>
+        <LanguageProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <TooltipAlert />
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </LanguageProvider>
+      </HeaderStyleProvider>
     </SafeAreaProvider>
   );
 }

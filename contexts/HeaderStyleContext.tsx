@@ -2,14 +2,17 @@
 import { HeaderColorPairs } from '@/constants/HeaderColors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 interface HeaderStyleContextType {
-  color: { light: string; dark: string };
+  colors: { light: string; dark: string };
+  color: string;
   setColor: React.Dispatch<React.SetStateAction<{ light: string; dark: string }>>;
 }
 
 const defaultContextValue: HeaderStyleContextType = {
-  color: HeaderColorPairs[0],
+  colors: HeaderColorPairs[0],
+  color: HeaderColorPairs[0].light,
   setColor: () => { },
 };
 
@@ -20,7 +23,8 @@ interface HeaderStyleProviderProps {
 }
 
 export const HeaderStyleProvider: React.FC<HeaderStyleProviderProps> = ({ children }) => {
-  const [color, setColor] = useState(defaultContextValue.color);
+  const [colors, setColor] = useState(defaultContextValue.colors);
+  const colorScheme = useColorScheme() ?? 'light';
 
   useEffect(() => {
     const loadBackgroundColor = (async () => {
@@ -40,17 +44,17 @@ export const HeaderStyleProvider: React.FC<HeaderStyleProviderProps> = ({ childr
   useEffect(() => {
     const saveBackgroundColor = async () => {
       try {
-        await AsyncStorage.setItem('backgroundColor', JSON.stringify(color));
+        await AsyncStorage.setItem('backgroundColor', JSON.stringify(colors));
       } catch (error) {
         console.error('Failed to save background color:', error);
       }
     };
 
     saveBackgroundColor();
-  }, [color]);
+  }, [colors]);
 
   return (
-    <HeaderStyleContext.Provider value={{ color: color, setColor: setColor }}>
+    <HeaderStyleContext.Provider value={{ color: colors[colorScheme], colors, setColor }}>
       {children}
     </HeaderStyleContext.Provider>
   );
