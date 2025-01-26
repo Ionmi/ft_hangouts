@@ -6,8 +6,9 @@ import {
     Easing,
     AppState,
     AppStateStatus,
+    View,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TooltipAlert = () => {
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -70,13 +71,13 @@ const TooltipAlert = () => {
     if (!tooltipVisible) return null;
 
     return (
-        <SafeAreaView style={[styles.safeArea, { paddingTop: insets.top }]}>
+        <View style={[styles.safeArea, { paddingTop: insets.top }]}>
             <Animated.View
                 style={[styles.tooltipContainer, { transform: [{ translateY }] }]}
             >
                 <Text style={styles.tooltipText}>{timeAwayMessage}</Text>
             </Animated.View>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -86,9 +87,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
+        alignSelf: 'center',
         zIndex: 1000,
     },
     tooltipContainer: {
