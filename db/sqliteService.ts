@@ -1,24 +1,23 @@
-import * as SQLite from 'expo-sqlite';
+// src/database/contactActions.ts
+import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
 import { Contact } from '../types/Contact';
 
-const db = await SQLite.openDatabaseAsync('contacts.db');
-
-// Crear la tabla de contactos
-export const createContactsTable = async (): Promise<void> => {
+// Create a contact table
+export const createContactsTable = async (db: SQLiteDatabase): Promise<void> => {
     await db.execAsync(
         `CREATE TABLE IF NOT EXISTS contacts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      email TEXT NOT NULL,
-      birthdate TEXT NOT NULL,
-      photo TEXT NOT NULL
-    );`
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          phone TEXT NOT NULL,
+          email TEXT NOT NULL,
+          birthdate TEXT NOT NULL,
+          photo TEXT NOT NULL
+        );`
     );
 };
 
-// Guardar un contacto
-export const saveContact = async (contact: Contact): Promise<void> => {
+// Save a contact
+export const saveContact = async (db: SQLiteDatabase, contact: Contact): Promise<void> => {
     const { name, phone, email, birthdate, photo } = contact;
     await db.runAsync(
         `INSERT INTO contacts (name, phone, email, birthdate, photo) VALUES (?, ?, ?, ?, ?);`,
@@ -26,13 +25,15 @@ export const saveContact = async (contact: Contact): Promise<void> => {
     );
 };
 
-// Obtener todos los contactos
-export const getContacts = async (): Promise<Contact[]> => {
-    return await db.getAllAsync(`SELECT * FROM contacts;`) as Contact[];
+// Get all contacts
+export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
+    const result = await db.getAllAsync<Contact>(`SELECT * FROM contacts;`);
+    return result;
 };
 
-// Actualizar un contacto
+// Update a contact
 export const updateContact = async (id: number, contact: Partial<Contact>): Promise<void> => {
+    const db = useSQLiteContext();
     const fields = [];
     const values: (string | number | null)[] = [];
 
@@ -57,7 +58,7 @@ export const updateContact = async (id: number, contact: Partial<Contact>): Prom
         values.push(contact.photo);
     }
 
-    values.push(id); // Añade el ID al final para la cláusula WHERE
+    values.push(id); // Adds the ID for WHERE clause
 
     if (fields.length > 0) {
         const query = `UPDATE contacts SET ${fields.join(', ')} WHERE id = ?;`;
@@ -65,7 +66,8 @@ export const updateContact = async (id: number, contact: Partial<Contact>): Prom
     }
 };
 
-// Eliminar un contacto
+// Delete a contact
 export const deleteContact = async (id: number): Promise<void> => {
+    const db = useSQLiteContext();
     await db.runAsync(`DELETE FROM contacts WHERE id = ?;`, [id]);
 };

@@ -11,6 +11,8 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import TooltipAlert from '../components/TooltipAlert';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
+import { SQLiteProvider } from 'expo-sqlite';
+import { migrateDbIfNeeded } from '../db/init';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,19 +34,21 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <HeaderStyleProvider>
-        <LanguageProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <TooltipAlert />
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </LanguageProvider>
-      </HeaderStyleProvider>
-    </SafeAreaProvider>
+    <SQLiteProvider databaseName="contacts.db" onInit={migrateDbIfNeeded}>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <HeaderStyleProvider>
+          <LanguageProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <TooltipAlert />
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style="auto" />
+            </ThemeProvider>
+          </LanguageProvider>
+        </HeaderStyleProvider>
+      </SafeAreaProvider>
+    </SQLiteProvider>
   );
 }
