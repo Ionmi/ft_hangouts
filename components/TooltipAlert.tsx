@@ -9,6 +9,7 @@ import {
     View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const TooltipAlert = () => {
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -16,6 +17,7 @@ const TooltipAlert = () => {
     const [timeAwayMessage, setTimeAwayMessage] = useState('');
     const translateY = useState(new Animated.Value(-100))[0]; // Inicia fuera de la pantalla
     const insets = useSafeAreaInsets();
+    const { language } = useLanguage();
 
     // Manejar AppState
     useEffect(() => {
@@ -40,10 +42,24 @@ const TooltipAlert = () => {
 
     // Formatear tiempo transcurrido
     const formatTimeAway = (seconds: number): string => {
+        if (language === 'es') {
+            if (seconds === 1) return 'Estuviste ausente por 1 segundo.';
+            if (seconds < 60) return `Estuviste ausente por ${seconds} segundos.`;
+            const minutes = Math.floor(seconds / 60);
+            if (minutes === 1) return 'Estuviste ausente por 1 minuto.';
+            if (minutes < 60) return `Estuviste ausente por ${minutes} minutos.`;
+            const hours = Math.floor(minutes / 60);
+            if (hours === 1) return 'Estuviste ausente por 1 hora.';
+            return `Estuviste ausente por ${hours} horas.`;
+        }
+
+        if (seconds === 1) return 'You were away for 1 second.';
         if (seconds < 60) return `You were away for ${seconds} seconds.`;
         const minutes = Math.floor(seconds / 60);
+        if (minutes === 1) return 'You were away for 1 minute.';
         if (minutes < 60) return `You were away for ${minutes} minutes.`;
         const hours = Math.floor(minutes / 60);
+        if (hours === 1) return 'You were away for 1 hour.';
         return `You were away for ${hours} hours.`;
     };
 
