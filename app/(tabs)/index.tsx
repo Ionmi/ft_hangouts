@@ -13,6 +13,7 @@ import { Contact } from '../../types/Contact';
 import { deleteContact, getContacts, saveContact, updateContact } from '../../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
 import ContactCardList from '../../components/ContactCardList';
+import { useFocusEffect } from 'expo-router';
 
 export default function HomeScreen() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -21,12 +22,12 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const db = useSQLiteContext();
 
+  const fetchContacts = async () => {
+    const result = await getContacts(db);
+    setContacts(result);
+  };
   useEffect(() => {
     // Fetch contacts on component mount
-    const fetchContacts = async () => {
-      const result = await getContacts(db);
-      setContacts(result);
-    };
     fetchContacts();
   }, []);  // Empty dependency ensures this only runs once
 
@@ -53,10 +54,17 @@ export default function HomeScreen() {
   };
 
   const handleDelete = async (id: number) => {
-    await deleteContact(id);
+    await deleteContact(db, id);
     const updatedContacts = await getContacts(db);  // Refresh the list
     setContacts(updatedContacts);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchContacts();
+    }, [])
+  );
+
 
   return (
     <ParallaxScrollView
@@ -81,7 +89,7 @@ export default function HomeScreen() {
         <ContactForm onSubmit={handleFormSubmit} onCancel={() => setModalVisible(false)} />
       </Modal>
 
-      <ContactCardList contacts={contacts} setContacts={setContacts} />
+      <ContactCardList contacts={contacts}/>
 
     </ParallaxScrollView>
 

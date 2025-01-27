@@ -3,21 +3,10 @@ import { View, StyleSheet, Image, ImageURISource } from "react-native";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 import { IconSymbol } from "./ui/IconSymbol";
-import { useThemeColor } from "../hooks/useThemeColor";
-import { Pressable } from "react-native";
-import { Href, Link, useRouter } from 'expo-router';
-import { Stack } from 'expo-router';
-
+import { Link } from 'expo-router';
 interface ContactCardListProps {
     contacts: Contact[];
-    setContacts: (contacts: Contact[]) => void;
 }
-
-
-
-
-
-
 
 const ContactCard = ({ contact }: { contact: Contact }) => {
 
@@ -26,11 +15,7 @@ const ContactCard = ({ contact }: { contact: Contact }) => {
             <Link href={{
                 pathname: "/contact",
                 params: {
-                    name: contact.name,
-                    phone: contact.phone,
-                    email: contact.email,
-                    photo: contact.photo,
-                    birthdate: contact.birthdate,
+                    ...contact,
                 }
             }}>
                 <ThemedView style={styles.contactItem} key={contact.id}>

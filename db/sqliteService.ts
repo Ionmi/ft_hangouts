@@ -67,7 +67,6 @@ export const updateContact = async (id: number, contact: Partial<Contact>): Prom
 };
 
 // Delete a contact
-export const deleteContact = async (id: number): Promise<void> => {
-    const db = useSQLiteContext();
+export const deleteContact = async (db: SQLiteDatabase, id: number): Promise<void> => {
     await db.runAsync(`DELETE FROM contacts WHERE id = ?;`, [id]);
 };

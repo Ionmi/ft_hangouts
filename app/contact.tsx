@@ -10,20 +10,40 @@ import { IconSymbol } from '../components/ui/IconSymbol';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { SecondaryButton } from '../components/ui/SecondaryButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { deleteContact } from '../db/sqliteService';
+import { useSQLiteContext } from 'expo-sqlite';
+
+
 
 export default function Contact() {
     const params = useLocalSearchParams();
     const { color } = useAccentStyle();
     const textColor = useThemeColor({}, 'text');
     const insets = useSafeAreaInsets();
+    const router = useRouter();
+    const db = useSQLiteContext();
+    const { t } = useLanguage();
+
     const {
+        id,
         name,
         phone,
         email,
         birthdate,
         photo,
     } = params as unknown as Contact
-    const { t } = useLanguage();
+
+
+    const handleDelete = async () => {
+        deleteContact(db, id!);
+        router.back();
+    };
+
+    // const handleUpdate = async () => {
+    //     const updatedContact = { ...contact, name: 'Updated Name' };
+    //     await updateContact(contact.id, updatedContact);
+    //     router.back();
+    // };
 
     return (
         <ThemedView style={[{ paddingBottom: insets.bottom }, styles.container]}>
@@ -59,7 +79,7 @@ export default function Contact() {
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
                 <PrimaryButton onPress={() => { }} text='Edit' icon='pencil' />
-                <SecondaryButton onPress={() => { }} text='Delete' icon='trash' />
+                <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
             </ThemedView>
         </ThemedView>
     );
