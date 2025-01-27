@@ -43,21 +43,6 @@ export default function HomeScreen() {
     }
   };
 
-  const handleUpdate = async (id: number) => {
-    const updatedContact: Partial<Contact> = {
-      name: 'Updated Name',
-      phone: '987654321',
-    };
-    await updateContact(id, updatedContact);
-    const updatedContacts = await getContacts(db);  // Refresh the list
-    setContacts(updatedContacts);
-  };
-
-  const handleDelete = async (id: number) => {
-    await deleteContact(db, id);
-    const updatedContacts = await getContacts(db);  // Refresh the list
-    setContacts(updatedContacts);
-  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -89,7 +74,7 @@ export default function HomeScreen() {
         <ContactForm onSubmit={handleFormSubmit} onCancel={() => setModalVisible(false)} />
       </Modal>
 
-      <ContactCardList contacts={contacts}/>
+      <ContactCardList contacts={contacts} />
 
     </ParallaxScrollView>
 

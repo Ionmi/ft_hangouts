@@ -32,8 +32,7 @@ export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
 };
 
 // Update a contact
-export const updateContact = async (id: number, contact: Partial<Contact>): Promise<void> => {
-    const db = useSQLiteContext();
+export const updateContact = async (db: SQLiteDatabase, id: number, contact: Partial<Contact>): Promise<void> => {
     const fields = [];
     const values: (string | number | null)[] = [];
 

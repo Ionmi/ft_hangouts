@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Text, StyleSheet, Image, ImageURISource, View } from 'react-native';
+import { Text, StyleSheet, Image, ImageURISource, View, Modal } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
-import { type Contact } from '../types/Contact';
+import { Contact, type Contact } from '../types/Contact';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedView } from '../components/ThemedView';
@@ -10,8 +10,10 @@ import { IconSymbol } from '../components/ui/IconSymbol';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { SecondaryButton } from '../components/ui/SecondaryButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { deleteContact } from '../db/sqliteService';
+import { deleteContact, updateContact } from '../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
+import ContactForm from '../components/ContactForm';
+import { useState } from 'react';
 
 
 
@@ -23,35 +25,43 @@ export default function Contact() {
     const router = useRouter();
     const db = useSQLiteContext();
     const { t } = useLanguage();
-
-    const {
-        id,
-        name,
-        phone,
-        email,
-        birthdate,
-        photo,
-    } = params as unknown as Contact
+    const [modalVisible, setModalVisible] = useState(false);
+    const [contact, setContact] = useState<Contact>(params as unknown as Contact);
 
 
     const handleDelete = async () => {
-        deleteContact(db, id!);
+        deleteContact(db, contact.id!);
         router.back();
     };
 
-    // const handleUpdate = async () => {
-    //     const updatedContact = { ...contact, name: 'Updated Name' };
-    //     await updateContact(contact.id, updatedContact);
-    //     router.back();
-    // };
+    const handleUpdate = async (updated: Contact) => {
+
+        await updateContact(db, contact.id!, updated);
+        setContact({
+            id: contact.id,
+            ...updated,
+        });
+    };
 
     return (
         <ThemedView style={[{ paddingBottom: insets.bottom }, styles.container]}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <ContactForm onSubmit={handleUpdate}
+                    contact={contact}
+                    onCancel={() => setModalVisible(false)}
+                />
+            </Modal>
+
             <ThemedView style={styles.content}>
                 <Stack.Screen
                     options={{
                         navigationBarHidden: true,
-                        title: name,
+                        title: contact.name,
                         headerBackTitle: t('back'),
                         headerTintColor: textColor,
                         headerStyle: {
@@ -60,25 +70,25 @@ export default function Contact() {
                     }}
                 />
 
-                <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
-                <ThemedText type="title" style={[styles.name, { color: textColor }]}>{name}</ThemedText>
+                <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
+                <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
                 <ThemedView style={styles.textContainer}>
                     <IconSymbol name="phone.fill" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{phone}</ThemedText>
+                    <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
                 </ThemedView>
 
                 <ThemedView style={styles.textContainer}>
                     <IconSymbol name="envelope.fill" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{email}</ThemedText>
+                    <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{contact.email}</ThemedText>
                 </ThemedView>
                 <ThemedView style={styles.textContainer}>
                     <IconSymbol name="calendar" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{birthdate}</ThemedText>
+                    <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
                 </ThemedView>
 
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
-                <PrimaryButton onPress={() => { }} text='Edit' icon='pencil' />
+                <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
                 <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
             </ThemedView>
         </ThemedView>

@@ -13,16 +13,17 @@ import { Contact } from '../types/Contact';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
+    contact?: Contact | null;
     onCancel: () => void;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }) => {
     const color = useThemeColor({}, 'text');
-    const [name, setName] = useState<string>('');
-    const [phone, setPhone] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [photo, setPhoto] = useState<string>('');
-    const [birthdate, setbirthdate] = useState<Date | undefined>(undefined);
+    const [name, setName] = useState<string>(contact?.name || '');
+    const [phone, setPhone] = useState<string>(contact?.phone || '');
+    const [email, setEmail] = useState<string>(contact?.email || '');
+    const [photo, setPhoto] = useState<string>(contact?.photo || '');
+    const [birthdate, setbirthdate] = useState<Date | undefined>(contact?.birthdate ? new Date(contact.birthdate) : undefined);
     const { color: accent } = useAccentStyle();
     const { t } = useLanguage();
 
