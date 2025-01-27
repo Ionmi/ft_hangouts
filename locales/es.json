@@ -8,5 +8,6 @@
   "contacts": "Contactos",
   "home": "Inicio",
   "fillAllFields": "Todos lo campos son obligatorios",
-  "invalidPhone": "Número de teléfono no válido.\nDebe contener solo números y estar entre 10 y 15 dígitos."
+  "invalidPhone": "Número de teléfono no válido.\nDebe contener solo números y estar entre 10 y 15 dígitos.",
+  "back": "Volver"
 }

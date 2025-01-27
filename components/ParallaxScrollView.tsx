@@ -8,9 +8,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
-import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAccentStyle } from '@/contexts/HeaderStyleContext';
+import { useBottomTabOverflow } from './ui/TabBarBackground';
 
 const HEADER_HEIGHT = 240;
 
@@ -53,7 +53,7 @@ export default function ParallaxScrollView({
         nestedScrollEnabled={nestedScrollEnabled}
         ref={scrollRef}
         scrollEventThrottle={16}
-        scrollIndicatorInsets={{ bottom }}
+        scrollIndicatorInsets={{ bottom: bottom }}
         contentContainerStyle={{ paddingBottom: bottom }}>
         <Animated.View
           style={[

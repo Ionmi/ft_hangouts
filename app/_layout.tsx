@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import TooltipAlert from '../components/TooltipAlert';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
@@ -42,6 +42,7 @@ export default function RootLayout() {
               <TooltipAlert />
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="contact" />
                 <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />

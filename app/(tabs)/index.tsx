@@ -12,7 +12,7 @@ import ContactForm from '../../components/ContactForm';
 import { Contact } from '../../types/Contact';
 import { deleteContact, getContacts, saveContact, updateContact } from '../../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
-import ContactCardList from '../../components/ContactCard';
+import ContactCardList from '../../components/ContactCardList';
 
 export default function HomeScreen() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -58,15 +58,6 @@ export default function HomeScreen() {
     setContacts(updatedContacts);
   };
 
-  const renderContactItem = ({ item }: { item: Contact }) => (
-    <ThemedView style={styles.contactItem} key={item.id}>
-      <ThemedText>{item.name}</ThemedText>
-      <ThemedText>{item.phone}</ThemedText>
-      <ThemedText>{item.email}</ThemedText>
-      <ThemedText>{item.birthdate}</ThemedText>
-    </ThemedView>
-  );
-
   return (
     <ParallaxScrollView
       headerImage={<Image source={require('@/assets/images/42.png')} style={styles.ftLogo} />}
@@ -93,6 +84,7 @@ export default function HomeScreen() {
       <ContactCardList contacts={contacts} setContacts={setContacts} />
 
     </ParallaxScrollView>
+
   );
 }
 

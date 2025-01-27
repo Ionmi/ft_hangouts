@@ -8,5 +8,6 @@
   "contacts": "Contacts",
   "home": "Home",
   "fillAllFields": "All fields are required.",
-  "invalidPhone": "Invalid phone number.\nIt should contain only numbers and be between 10 and 15 digits."
+  "invalidPhone": "Invalid phone number.\nIt should contain only numbers and be between 10 and 15 digits.",
+  "back": "Back"
 }
