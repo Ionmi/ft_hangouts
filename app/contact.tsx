@@ -7,11 +7,15 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedView } from '../components/ThemedView';
 import { ThemedText } from '../components/ThemedText';
 import { IconSymbol } from '../components/ui/IconSymbol';
+import { PrimaryButton } from '../components/ui/PrimaryButton';
+import { SecondaryButton } from '../components/ui/SecondaryButton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Contact() {
     const params = useLocalSearchParams();
     const { color } = useAccentStyle();
     const textColor = useThemeColor({}, 'text');
+    const insets = useSafeAreaInsets();
     const {
         name,
         phone,
@@ -22,48 +26,58 @@ export default function Contact() {
     const { t } = useLanguage();
 
     return (
-        <ThemedView style={styles.container}>
-            <Stack.Screen
-                options={{
-                    navigationBarHidden: true,
-                    title: name,
-                    headerBackTitle: t('back'),
-                    headerTintColor: textColor,
-                    headerStyle: {
-                        backgroundColor: color,
-                    }
-                }}
-            />
+        <ThemedView style={[{ paddingBottom: insets.bottom }, styles.container]}>
+            <ThemedView style={styles.content}>
+                <Stack.Screen
+                    options={{
+                        navigationBarHidden: true,
+                        title: name,
+                        headerBackTitle: t('back'),
+                        headerTintColor: textColor,
+                        headerStyle: {
+                            backgroundColor: color,
+                        }
+                    }}
+                />
 
-            <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
-            <ThemedText type="title" style={[styles.name, { color: textColor }]}>{name}</ThemedText>
-            <ThemedView style={styles.textContainer}>
-                <IconSymbol name="phone.fill" color={textColor} size={24} />
-                <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{phone}</ThemedText>
+                <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
+                <ThemedText type="title" style={[styles.name, { color: textColor }]}>{name}</ThemedText>
+                <ThemedView style={styles.textContainer}>
+                    <IconSymbol name="phone.fill" color={textColor} size={24} />
+                    <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{phone}</ThemedText>
+                </ThemedView>
+
+                <ThemedView style={styles.textContainer}>
+                    <IconSymbol name="envelope.fill" color={textColor} size={24} />
+                    <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{email}</ThemedText>
+                </ThemedView>
+                <ThemedView style={styles.textContainer}>
+                    <IconSymbol name="calendar" color={textColor} size={24} />
+                    <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{birthdate}</ThemedText>
+                </ThemedView>
+
             </ThemedView>
-
-            <ThemedView style={styles.textContainer}>
-                <IconSymbol name="envelope.fill" color={textColor} size={24} />
-                <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{email}</ThemedText>
+            <ThemedView style={styles.buttonContainer}>
+                <PrimaryButton onPress={() => { }} text='Edit' icon='pencil' />
+                <SecondaryButton onPress={() => { }} text='Delete' icon='trash' />
             </ThemedView>
-            <ThemedView style={styles.textContainer}>
-                <IconSymbol name="calendar" color={textColor} size={24} />
-                <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{birthdate}</ThemedText>
-            </ThemedView>
-
-
         </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flexDirection: 'column',
+        padding: 24,
+        flex: 1,
+    },
+    content: {
         flex: 1,
         flexDirection: 'column',
-        padding: 16,
-
-        elevation: 5,
         gap: 4
+    },
+    buttonContainer: {
+        gap: 8,
     },
     textContainer: {
         flexDirection: 'row',
