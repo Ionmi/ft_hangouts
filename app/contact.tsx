@@ -61,12 +61,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         padding: 16,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
+
         elevation: 5,
         gap: 4
     },
@@ -94,6 +89,5 @@ const styles = StyleSheet.create({
     },
     birthdate: {
         fontSize: 16,
-        color: '#666',
     },
 });
