@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Text, StyleSheet, Image, ImageURISource, View, Modal } from 'react-native';
+import {  StyleSheet, Image, ImageURISource, Modal } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Contact, type Contact } from '../types/Contact';
+import { type Contact } from '../types/Contact';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedView } from '../components/ThemedView';
@@ -41,6 +41,7 @@ export default function Contact() {
             id: contact.id,
             ...updated,
         });
+        setModalVisible(false);
     };
 
     return (
