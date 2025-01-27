@@ -12,6 +12,7 @@ import ContactForm from '../../components/ContactForm';
 import { Contact } from '../../types/Contact';
 import { deleteContact, getContacts, saveContact, updateContact } from '../../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
+import ContactCardList from '../../components/ContactCard';
 
 export default function HomeScreen() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -69,10 +70,12 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView
       headerImage={<Image source={require('@/assets/images/42.png')} style={styles.ftLogo} />}
+      nestedScrollEnabled={true}
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("contacts")}</ThemedText>
         <HelloWave />
+        <ThemedView style={{ flex: 1 }} />
         <Button onPress={() => setModalVisible(true)}>
           <IconSymbol name="plus" size={24} color={color} />
         </Button>
@@ -87,11 +90,8 @@ export default function HomeScreen() {
         <ContactForm onSubmit={handleFormSubmit} onCancel={() => setModalVisible(false)} />
       </Modal>
 
+      <ContactCardList contacts={contacts} setContacts={setContacts} />
 
-      <ThemedView style={styles.contactsListContainer}>
-        {/* Removed ScrollView, using FlatList directly */}
-        {contacts.map((contact) => renderContactItem({ item: contact }))}
-      </ThemedView>
     </ParallaxScrollView>
   );
 }

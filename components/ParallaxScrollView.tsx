@@ -16,11 +16,13 @@ const HEADER_HEIGHT = 240;
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
+  nestedScrollEnabled?: boolean;
 }>;
 
 export default function ParallaxScrollView({
   children,
   headerImage,
+  nestedScrollEnabled = false,
 }: Props) {
   const colorScheme = useColorScheme() ?? 'light';
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -48,6 +50,7 @@ export default function ParallaxScrollView({
   return (
     <ThemedView style={styles.container}>
       <Animated.ScrollView
+        nestedScrollEnabled={nestedScrollEnabled}
         ref={scrollRef}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
