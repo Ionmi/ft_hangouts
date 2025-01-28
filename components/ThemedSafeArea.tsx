@@ -1,4 +1,4 @@
-import { useThemeColor } from '@/hooks/useThemeColor';
+
 import { ViewProps } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

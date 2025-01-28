@@ -64,7 +64,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     return (
         <ThemedSafeArea style={styles.safeArea}>
             <View style={styles.titleContainer}>
-                <ThemedText type="title">Add Contact</ThemedText>
+                <ThemedText type="title">
+                    {contact ? t('editContact') : t('addContact')}
+                </ThemedText>
                 <Button title="Cancel" onPress={onCancel} color={accent} />
             </View>
             <Text style={[styles.label, { color }]}>Name</Text>
