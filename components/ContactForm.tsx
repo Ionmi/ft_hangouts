@@ -128,7 +128,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        padding: 20,
+        padding: 16,
     },
     titleContainer: {
         flexDirection: 'row',

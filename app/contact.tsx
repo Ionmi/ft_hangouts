@@ -14,6 +14,7 @@ import { deleteContact, updateContact } from '../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
 import ContactForm from '../components/ContactForm';
 import { useState } from 'react';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 
 
@@ -27,7 +28,7 @@ export default function Contact() {
     const { t } = useLanguage();
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
-
+    const headerHeight = useHeaderHeight();
 
     const handleDelete = async () => {
         deleteContact(db, contact.id!);
@@ -45,7 +46,7 @@ export default function Contact() {
     };
 
     return (
-        <ThemedView style={[{ paddingBottom: insets.bottom }, styles.container]}>
+        <ThemedView style={[{ paddingBottom: insets.bottom + 16, paddingTop: headerHeight + 16 }, styles.container]}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -61,7 +62,7 @@ export default function Contact() {
             <ThemedView style={styles.content}>
                 <Stack.Screen
                     options={{
-                        navigationBarHidden: true,
+                        headerTransparent: true,
                         title: contact.name,
                         headerBackTitle: t('back'),
                         headerTintColor: textColor,
@@ -99,7 +100,7 @@ export default function Contact() {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        padding: 24,
+        padding: 16,
         flex: 1,
     },
     content: {
