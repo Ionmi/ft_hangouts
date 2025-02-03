@@ -17,10 +17,11 @@ export default function SettingsScreen() {
             headerImage={
                 <IconSymbol size={290} name="gear" color="#000" style={styles.gearLogo} />
             }
+
         >
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">{t('settings')}</ThemedText>
-            </ThemedView>
+
+            <ThemedText type="title">{t('settings')}</ThemedText>
+
             <ThemedText>{t('customize_settings')}</ThemedText>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText type="defaultSemiBold">{t('change_header_color')}</ThemedText>
@@ -36,11 +37,7 @@ export default function SettingsScreen() {
 
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-    },
+
     stepContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

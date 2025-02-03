@@ -67,7 +67,7 @@ export default function ParallaxScrollView({
           ]}>
           {headerImage}
         </Animated.View>
-        <ThemedView style={[styles.content, { minHeight: screen.height - HEADER_HEIGHT }, style]}>{children}</ThemedView>
+        <ThemedView style={[styles.content, { minHeight: screen.height - HEADER_HEIGHT - bottom }, style]}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );
