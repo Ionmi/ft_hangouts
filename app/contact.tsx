@@ -1,8 +1,7 @@
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Image, ImageURISource, Modal, View } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type Contact } from '../types/Contact';
-import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedView } from '../components/ThemedView';
 import { ThemedText } from '../components/ThemedText';
@@ -14,14 +13,13 @@ import { deleteContact, updateContact } from '../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
 import ContactForm from '../components/ContactForm';
 import { useState } from 'react';
-import { useHeaderHeight } from '@react-navigation/elements';
 import Button from '../components/ui/Button';
+import ParallaxScrollView from '../components/ParallaxScrollView';
 
 
 
 export default function Contact() {
     const params = useLocalSearchParams();
-    const { color } = useAccentStyle();
     const textColor = useThemeColor({}, 'text');
     const insets = useSafeAreaInsets();
     const router = useRouter();
@@ -29,7 +27,6 @@ export default function Contact() {
     const { t } = useLanguage();
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
-    const headerHeight = useHeaderHeight();
 
     const handleDelete = async () => {
         deleteContact(db, contact.id!);
@@ -47,19 +44,20 @@ export default function Contact() {
     };
 
     return (
-        <ThemedView style={[{ paddingBottom: insets.bottom + 16 }, styles.container]}>
-            <Stack.Screen
-                options={{
-                    headerTransparent: true,
-                    title: contact.name,
-                    headerBackTitle: t('back'),
-                    headerTintColor: textColor,
-                    headerShown: false,
-                    headerStyle: {
-                        backgroundColor: color,
-                    },
-                }}
-            />
+        <ParallaxScrollView
+            headerImage={
+                <SafeAreaView style={[styles.header, { paddingTop: insets.top }]}>
+                    <View style={[styles.headerContent,]}>
+                        <Button onPress={() => router.back()} style={styles.backButton}>
+                            <IconSymbol name="chevron.backward" color={textColor} size={24} />
+                        </Button>
+                        <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
+                    </View>
+                </SafeAreaView>
+            }
+            style={[styles.content, { paddingBottom: insets.bottom + 16 }]}
+        >
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -72,39 +70,24 @@ export default function Contact() {
                 />
             </Modal>
 
-
-            <SafeAreaView style={[styles.header, { backgroundColor: color }]}>
-                <View style={styles.headerContent}>
-                    <Button onPress={() => router.back()} style={styles.backButton}>
-                        <IconSymbol name="chevron.backward" color={textColor} size={24} />
-                    </Button>
-                    <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
-                </View>
-            </SafeAreaView>
-
-            <ThemedView style={styles.content}>
-
-                <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
-                <ThemedView style={styles.textContainer}>
-                    <IconSymbol name="phone.fill" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
-                </ThemedView>
-
-                <ThemedView style={styles.textContainer}>
-                    <IconSymbol name="envelope.fill" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{contact.email}</ThemedText>
-                </ThemedView>
-                <ThemedView style={styles.textContainer}>
-                    <IconSymbol name="calendar" color={textColor} size={24} />
-                    <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
-                </ThemedView>
-
-                <ThemedView style={styles.buttonContainer}>
-                    <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
-                    <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
-                </ThemedView>
+            <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
+            <ThemedView style={styles.textContainer}>
+                <IconSymbol name="phone.fill" color={textColor} size={24} />
+                <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
             </ThemedView>
-        </ThemedView>
+            <ThemedView style={styles.textContainer}>
+                <IconSymbol name="envelope.fill" color={textColor} size={24} />
+                <ThemedText type='defaultSemiBold' style={[styles.email, { color: textColor }]}>{contact.email}</ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.textContainer}>
+                <IconSymbol name="calendar" color={textColor} size={24} />
+                <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.buttonContainer}>
+                <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
+                <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
+            </ThemedView>
+        </ParallaxScrollView >
     );
 }
 
@@ -112,13 +95,16 @@ const styles = StyleSheet.create({
     header: {
         alignItems: 'center',
         width: '100%',
-        height: 240,
+        height: '100%',
     },
     headerContent: {
         flexDirection: 'row',
         position: 'relative',
         width: '100%',
+        height: '100%',
+        paddingBottom: 10,
         justifyContent: 'center',
+        alignContent: 'center',
     },
     backButton: {
         position: 'absolute',
@@ -127,16 +113,11 @@ const styles = StyleSheet.create({
         transform: [{ translateY: "-50%" }],
         padding: 8,
     },
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        gap: 24,
-    },
     content: {
-        paddingHorizontal: 24,
         flex: 1,
         flexDirection: 'column',
-        gap: 4
+        gap: 4,
+        padding: 32,
     },
     buttonContainer: {
         flex: 1,

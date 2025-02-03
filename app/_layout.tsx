@@ -42,7 +42,7 @@ export default function RootLayout() {
               <TooltipAlert />
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="contact" />
+                <Stack.Screen name="contact" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />
