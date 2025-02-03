@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import {  StyleSheet, Image, ImageURISource, Modal } from 'react-native';
+import { StyleSheet, Image, ImageURISource, Modal, View } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type Contact } from '../types/Contact';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
@@ -9,12 +9,13 @@ import { ThemedText } from '../components/ThemedText';
 import { IconSymbol } from '../components/ui/IconSymbol';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { SecondaryButton } from '../components/ui/SecondaryButton';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { deleteContact, updateContact } from '../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
 import ContactForm from '../components/ContactForm';
 import { useState } from 'react';
 import { useHeaderHeight } from '@react-navigation/elements';
+import Button from '../components/ui/Button';
 
 
 
@@ -46,7 +47,19 @@ export default function Contact() {
     };
 
     return (
-        <ThemedView style={[{ paddingBottom: insets.bottom + 16, paddingTop: headerHeight + 16 }, styles.container]}>
+        <ThemedView style={[{ paddingBottom: insets.bottom + 16 }, styles.container]}>
+            <Stack.Screen
+                options={{
+                    headerTransparent: true,
+                    title: contact.name,
+                    headerBackTitle: t('back'),
+                    headerTintColor: textColor,
+                    headerShown: false,
+                    headerStyle: {
+                        backgroundColor: color,
+                    },
+                }}
+            />
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -59,20 +72,18 @@ export default function Contact() {
                 />
             </Modal>
 
-            <ThemedView style={styles.content}>
-                <Stack.Screen
-                    options={{
-                        headerTransparent: true,
-                        title: contact.name,
-                        headerBackTitle: t('back'),
-                        headerTintColor: textColor,
-                        headerStyle: {
-                            backgroundColor: color,
-                        }
-                    }}
-                />
 
-                <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
+            <SafeAreaView style={[styles.header, { backgroundColor: color }]}>
+                <View style={styles.headerContent}>
+                    <Button onPress={() => router.back()} style={styles.backButton}>
+                        <IconSymbol name="chevron.backward" color={textColor} size={24} />
+                    </Button>
+                    <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
+                </View>
+            </SafeAreaView>
+
+            <ThemedView style={styles.content}>
+
                 <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
                 <ThemedView style={styles.textContainer}>
                     <IconSymbol name="phone.fill" color={textColor} size={24} />
@@ -88,27 +99,48 @@ export default function Contact() {
                     <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
                 </ThemedView>
 
-            </ThemedView>
-            <ThemedView style={styles.buttonContainer}>
-                <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
-                <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
+                <ThemedView style={styles.buttonContainer}>
+                    <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
+                    <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
+                </ThemedView>
             </ThemedView>
         </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
+    header: {
+        alignItems: 'center',
+        width: '100%',
+        height: 240,
+    },
+    headerContent: {
+        flexDirection: 'row',
+        position: 'relative',
+        width: '100%',
+        justifyContent: 'center',
+    },
+    backButton: {
+        position: 'absolute',
+        left: 0,
+        top: "50%",
+        transform: [{ translateY: "-50%" }],
+        padding: 8,
+    },
     container: {
-        flexDirection: 'column',
-        padding: 16,
         flex: 1,
+        flexDirection: 'column',
+        gap: 24,
     },
     content: {
+        paddingHorizontal: 24,
         flex: 1,
         flexDirection: 'column',
         gap: 4
     },
     buttonContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
         gap: 8,
     },
     textContainer: {
@@ -117,8 +149,9 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     photo: {
-        height: 180,
-        width: 180,
+        height: "100%",
+        width: "auto",
+        aspectRatio: 1,
         borderRadius: 10,
         marginBottom: 16,
     },
