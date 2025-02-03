@@ -3,13 +3,14 @@ import { View, TextInput, Button, StyleSheet, Text, Image, Alert, ImageURISource
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from './ThemedText';
-import { ThemedSafeArea } from './ThemedSafeArea';
 import { PrimaryButton } from './ui/PrimaryButton';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { SecondaryButton } from './ui/SecondaryButton';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Contact } from '../types/Contact';
+import { ThemedView } from './ThemedView';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
@@ -26,6 +27,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     const [birthdate, setbirthdate] = useState<Date | undefined>(contact?.birthdate ? new Date(contact.birthdate) : undefined);
     const { color: accent } = useAccentStyle();
     const { t } = useLanguage();
+    const insets = useSafeAreaInsets();
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -62,7 +64,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     };
 
     return (
-        <ThemedSafeArea style={styles.safeArea}>
+        <ThemedView style={[styles.safeArea, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }]}>
             <View style={styles.titleContainer}>
                 <ThemedText type="title">
                     {contact ? t('editContact') : t('addContact')}
@@ -121,14 +123,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             <View style={{ flex: 1 }} />
 
             <PrimaryButton onPress={handleSubmit} text="Save" />
-        </ThemedSafeArea>
+        </ThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        padding: 16,
+        padding: 32,
     },
     titleContainer: {
         flexDirection: 'row',
