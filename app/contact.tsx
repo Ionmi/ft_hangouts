@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StyleSheet, Image, ImageURISource, Modal, View, Alert } from 'react-native';
+import { StyleSheet, Image, ImageURISource, Modal, View, Alert, Linking } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type Contact } from '../types/Contact';
 import { useThemeColor } from '../hooks/useThemeColor';
@@ -29,6 +29,10 @@ export default function Contact() {
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
     const { color } = useAccentStyle();
+
+    const callNumber = (phoneNumber: string) => {
+        Linking.openURL(`tel:${phoneNumber}`);
+    };
 
     const handleDelete = async () => {
         Alert.alert(
@@ -118,7 +122,9 @@ export default function Contact() {
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
                 <PrimaryButton style={[styles.actionButton]} onPress={() => { }} text={t("message")} icon='message.fill' />
-                <SecondaryButton style={[styles.actionButton]} onPress={() => { }} text={t("call")} icon='phone.fill' />
+                <SecondaryButton style={[styles.actionButton]} onPress={() => {
+                    callNumber(contact.phone);
+                }} text={t("call")} icon='phone.fill' />
             </ThemedView>
         </ParallaxScrollView >
     );
