@@ -21,5 +21,6 @@
   "save": "Guardar",
   "birthdate": "Cumpleaños",
   "name": "Nombre",
-  "phoneNumber": "Nº Telefono"
+  "phoneNumber": "Nº Telefono",
+  "messages": "Mensajes"
 }

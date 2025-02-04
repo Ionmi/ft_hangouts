@@ -21,5 +21,6 @@
   "save": "Save",
   "birthdate": "Birthdate",
   "name": "Name",
-  "phoneNumber": "Phone number"
+  "phoneNumber": "Phone number",
+  "messages": "Messages"
 }

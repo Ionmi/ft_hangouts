@@ -20,10 +20,11 @@ const MAPPING = {
   'calendar': 'event',
   'pencil': 'edit',
   'trash': 'delete',
-  'dice': 'casino',
+  'dice': 'swap-horiz',
   'message.fill': 'message',
   'plus': 'add',
   'camera': 'photo-camera',
+  'message' : 'message',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

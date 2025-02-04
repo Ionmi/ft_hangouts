@@ -42,9 +42,10 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row', // Alinea el icono y el texto horizontalmente
         alignItems: 'center', // Centra verticalmente los elementos
+        justifyContent: 'center', // Centers elements horizontally
         borderRadius: 5,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
+        height: 32,
+        width: 48,
     },
 });
 

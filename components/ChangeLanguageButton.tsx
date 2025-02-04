@@ -41,9 +41,10 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row', // Aligns the icon and text horizontally
         alignItems: 'center', // Centers elements vertically
+        justifyContent: 'center', // Centers elements horizontally
         borderRadius: 5,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
+        height: 32,
+        width: 48,
     },
     text: {
         fontSize: 14,

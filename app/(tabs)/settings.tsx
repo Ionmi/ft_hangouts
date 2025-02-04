@@ -11,15 +11,13 @@ import { StyleSheet } from "react-native";
 import ChangeLanguageButton from "../../components/ChangeLanguageButton";
 
 export default function SettingsScreen() {
-    const { t, setLanguage } = useLanguage();
+    const { t } = useLanguage();
     return (
         <ParallaxScrollView
             header={
                 <IconSymbol size={290} name="gear" color="#000" style={styles.gearLogo} />
             }
-
         >
-
             <ThemedText type="title">{t('settings')}</ThemedText>
 
             <ThemedText>{t('customize_settings')}</ThemedText>
