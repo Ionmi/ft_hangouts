@@ -31,7 +31,7 @@ export default function Contact() {
     const { color } = useAccentStyle();
 
     const callNumber = (phoneNumber: string) => {
-        Linking.openURL(`tel:${phoneNumber}`);
+        Linking.openURL(`tel:+${phoneNumber}`);
     };
 
     const handleDelete = async () => {
@@ -110,7 +110,7 @@ export default function Contact() {
 
             <ThemedView style={styles.textContainer}>
                 <IconSymbol name="phone.fill" color={textColor} size={24} />
-                <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
+                <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>+{contact.phone}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.textContainer}>
                 <IconSymbol name="envelope.fill" color={textColor} size={24} />

@@ -5,7 +5,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from './ThemedText';
 import { PrimaryButton } from './ui/PrimaryButton';
 import { useThemeColor } from '../hooks/useThemeColor';
-import { SecondaryButton } from './ui/SecondaryButton';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Contact } from '../types/Contact';
@@ -43,9 +42,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
 
         if (!result.canceled) {
             const imageUri = result.assets[0].uri;
-            // Extract file name from the URI
             const fileName = imageUri.split('/').pop();
-            // Define a new path in the document directory
             const documentDirectory = FileSystem.documentDirectory;
             if (!documentDirectory) {
                 console.error('Document directory is null');
@@ -53,16 +50,13 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             }
             const newPath = documentDirectory + fileName;
             try {
-                // Copy the image to the new path
                 await FileSystem.copyAsync({
                     from: imageUri,
                     to: newPath,
                 });
-                // Set the persistent path
                 setPhoto(newPath);
             } catch (error) {
                 console.error('Error copying image: ', error);
-                // Fallback to the original URI in case of an error
                 setPhoto(imageUri);
             }
         }
@@ -86,9 +80,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             return;
         }
 
-        onSubmit({ name, phone, email, photo, birthdate: formatDate(birthdate) });
-    };
+        // Remove the leading "+" for storage
+        const phoneToSave = phone.startsWith('+') ? phone.slice(1) : phone;
 
+        onSubmit({ name, phone: phoneToSave, email, photo, birthdate: formatDate(birthdate) });
+    };
     return (
 
         <ThemedSafeArea style={[styles.safeArea]}>
@@ -123,15 +119,17 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 onChangeText={setName}
                 placeholder="Enter name"
                 placeholderTextColor={color}
+                autoCorrect={false}
             />
 
             <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("phoneNumber")}</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
-                value={phone}
+                value={
+                    phone && !phone.startsWith('+') ? '+' + phone : phone}
                 onChangeText={setPhone}
                 keyboardType="phone-pad"
-                placeholder="Enter phone number"
+                placeholder={t("phoneNumber")}
                 placeholderTextColor={color}
             />
 
@@ -141,8 +139,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
-                placeholder="Enter email"
+                placeholder="Email"
                 placeholderTextColor={color}
+                autoCorrect={false}
+                autoCapitalize="none"
             />
 
             <ThemedView style={styles.birthdateContainer}>
