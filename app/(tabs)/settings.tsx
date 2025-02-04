@@ -14,7 +14,7 @@ export default function SettingsScreen() {
     const { t, setLanguage } = useLanguage();
     return (
         <ParallaxScrollView
-            headerImage={
+            header={
                 <IconSymbol size={290} name="gear" color="#000" style={styles.gearLogo} />
             }
 

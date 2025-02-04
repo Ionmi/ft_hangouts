@@ -11,6 +11,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Contact } from '../types/Contact';
 import { ThemedSafeArea } from './ThemedSafeArea';
 import TextButton from './ui/TextButton';
+import * as FileSystem from 'expo-file-system';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
@@ -33,12 +34,34 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [1, 1],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setPhoto(result.assets[0].uri);
+            const imageUri = result.assets[0].uri;
+            // Extract file name from the URI
+            const fileName = imageUri.split('/').pop();
+            // Define a new path in the document directory
+            const documentDirectory = FileSystem.documentDirectory;
+            if (!documentDirectory) {
+                console.error('Document directory is null');
+                return;
+            }
+            const newPath = documentDirectory + fileName;
+            try {
+                // Copy the image to the new path
+                await FileSystem.copyAsync({
+                    from: imageUri,
+                    to: newPath,
+                });
+                // Set the persistent path
+                setPhoto(newPath);
+            } catch (error) {
+                console.error('Error copying image: ', error);
+                // Fallback to the original URI in case of an error
+                setPhoto(imageUri);
+            }
         }
     };
 
@@ -46,6 +69,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
         const phoneRegex = /^[0-9]{10,15}$/;
         return phoneRegex.test(phone);
     };
+
+    const formatDate = (date: Date) => date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
     const handleSubmit = () => {
         if (!name || !phone || !email || !photo || !birthdate) {
@@ -58,9 +83,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             return;
         }
 
-        const formattedbirthdate = birthdate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-        onSubmit({ name, phone, email, photo, birthdate: formattedbirthdate });
+        onSubmit({ name, phone, email, photo, birthdate: formatDate(birthdate) });
     };
 
     return (
@@ -100,22 +123,28 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 placeholderTextColor={color}
             />
 
-            <Text style={[styles.label, { color }]}>birthdate</Text>
+            <Text style={[styles.label, { color }]}>Birthdate</Text>
 
-            {Platform.OS === 'android' && !showDatePicker && (
-                <TextButton title="Select Date" onPress={() => setShowDatePicker(true)} color={accent} type="defaultSemiBold" />
-            )}
+            {Platform.OS === 'android' &&
+                <TextButton
+                    title={birthdate ? formatDate(birthdate) : "Select Date"}
+                    onPress={() => setShowDatePicker(true)}
+                    color={accent}
+                    type="defaultSemiBold"
+                />
+            }
             {(Platform.OS === 'ios' || showDatePicker) && (
                 <DateTimePicker
+                    accentColor={accent}
+                    textColor={accent}
                     value={birthdate || new Date()}
                     mode="date"
                     display="default"
                     onChange={(event, selectedDate) => {
-                        // En Android, ocultamos el picker cuando se cierra o se descarta
+                        setBirthdate(selectedDate || birthdate);
                         if (Platform.OS === 'android') {
                             setShowDatePicker(false);
                         }
-                        setBirthdate(selectedDate || birthdate);
                     }}
                 />
             )}

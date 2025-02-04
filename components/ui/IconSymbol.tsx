@@ -13,6 +13,7 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'chevron.backward' : 'chevron-left',
   'gear': 'settings',
   'phone.fill': 'phone',
   'envelope.fill': 'email',

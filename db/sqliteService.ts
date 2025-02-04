@@ -1,5 +1,5 @@
 // src/database/contactActions.ts
-import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+import { SQLiteDatabase } from 'expo-sqlite';
 import { Contact } from '../types/Contact';
 
 // Create a contact table

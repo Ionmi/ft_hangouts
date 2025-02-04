@@ -64,7 +64,7 @@ export default function Contact() {
 
     return (
         <ParallaxScrollView
-            headerImage={
+            header={
                 <SafeAreaView style={[styles.header, { paddingTop: insets.top }]}>
                     <View style={[styles.headerContent,]}>
                         <Button onPress={() => router.back()} style={styles.backButton}>
@@ -91,6 +91,7 @@ export default function Contact() {
                 />
             </Modal>
 
+
             <ThemedView style={styles.titleContent}>
                 <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
 
@@ -101,6 +102,8 @@ export default function Contact() {
                     <IconSymbol name="pencil" color={textColor} size={24} />
                 </Button>
             </ThemedView>
+
+
             <ThemedView style={styles.textContainer}>
                 <IconSymbol name="phone.fill" color={textColor} size={24} />
                 <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
@@ -170,6 +173,8 @@ const styles = StyleSheet.create({
         width: 42,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingHorizontal: 0,
+        paddingVertical: 0,
     },
     textContainer: {
         flexDirection: 'row',

@@ -8,30 +8,28 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAccentStyle } from '@/contexts/HeaderStyleContext';
 import { useBottomTabOverflow } from './ui/TabBarBackground';
-import { getTabBarHeight } from '@react-navigation/bottom-tabs/lib/typescript/commonjs/src/views/BottomTabBar';
 
 const HEADER_HEIGHT = 240;
 
 type Props = PropsWithChildren<{
-  headerImage: ReactElement;
+  header: ReactElement;
   nestedScrollEnabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }>;
 
 export default function ParallaxScrollView({
   children,
-  headerImage,
+  header,
   nestedScrollEnabled = false,
   style = {},
 }: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
+
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
   const bottom = useBottomTabOverflow();
-  const { colors: backgroundColor } = useAccentStyle();
+  const { color } = useAccentStyle();
   const windowDimensions = Dimensions.get('window');
   const extraHeight = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
   const availableHeight = windowDimensions.height - extraHeight;
@@ -64,10 +62,11 @@ export default function ParallaxScrollView({
         <Animated.View
           style={[
             styles.header,
-            { backgroundColor: backgroundColor[colorScheme] },
+            { backgroundColor: color },
             headerAnimatedStyle,
-          ]}>
-          {headerImage}
+          ]}
+        >
+          {header}
         </Animated.View>
         <ThemedView style={[styles.content, { minHeight: availableHeight - HEADER_HEIGHT - bottom }, style]}>{children}</ThemedView>
       </Animated.ScrollView>

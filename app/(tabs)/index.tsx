@@ -53,7 +53,7 @@ export default function HomeScreen() {
 
   return (
     <ParallaxScrollView
-      headerImage={<Image source={require('@/assets/images/42.png')} style={styles.ftLogo} />}
+      header={<Image source={require('@/assets/images/42.png')} style={styles.ftLogo} />}
       nestedScrollEnabled={true}
     >
       <ThemedView style={styles.titleContainer}>
@@ -83,7 +83,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-   modalContainer: {
+  modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
