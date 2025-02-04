@@ -7,6 +7,7 @@ import {
     AppState,
     AppStateStatus,
     View,
+    SafeAreaView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -87,6 +88,7 @@ const TooltipAlert = () => {
     if (!tooltipVisible) return null;
 
     return (
+
         <View style={[styles.safeArea, { paddingTop: insets.top }]}>
             <Animated.View
                 style={[styles.tooltipContainer, { transform: [{ translateY }] }]}
@@ -94,6 +96,7 @@ const TooltipAlert = () => {
                 <Text style={styles.tooltipText}>{timeAwayMessage}</Text>
             </Animated.View>
         </View>
+
     );
 };
 

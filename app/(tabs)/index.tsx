@@ -58,7 +58,7 @@ export default function HomeScreen() {
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("contacts")}</ThemedText>
-        <HelloWave />
+        {/* <HelloWave /> */}
         <ThemedView style={{ flex: 1 }} />
         <Button onPress={() => setModalVisible(true)}>
           <IconSymbol name="plus" size={24} color={color} />
@@ -67,9 +67,10 @@ export default function HomeScreen() {
 
       <Modal
         animationType="slide"
-        presentationStyle='overFullScreen'
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
+        hardwareAccelerated={true}
+        statusBarTranslucent={true}
       >
         <ContactForm onSubmit={handleFormSubmit} onCancel={() => setModalVisible(false)} />
       </Modal>

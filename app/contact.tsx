@@ -82,6 +82,8 @@ export default function Contact() {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                hardwareAccelerated={true}
+                statusBarTranslucent={true}
             >
                 <ContactForm onSubmit={handleUpdate}
                     contact={contact}

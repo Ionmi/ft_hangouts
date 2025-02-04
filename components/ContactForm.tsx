@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Image, Alert, ImageURISource, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image, Alert, ImageURISource, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from './ThemedText';
@@ -9,8 +9,8 @@ import { SecondaryButton } from './ui/SecondaryButton';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Contact } from '../types/Contact';
-import { ThemedView } from './ThemedView';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ThemedSafeArea } from './ThemedSafeArea';
+import TextButton from './ui/TextButton';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
@@ -27,7 +27,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     const [birthdate, setBirthdate] = useState<Date | undefined>(contact?.birthdate ? new Date(contact.birthdate) : undefined);
     const { color: accent } = useAccentStyle();
     const { t } = useLanguage();
-    const insets = useSafeAreaInsets();
     const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
 
     const pickImage = async () => {
@@ -65,12 +64,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     };
 
     return (
-        <ThemedView style={[styles.safeArea, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }]}>
+        <ThemedSafeArea style={[styles.safeArea]}>
             <View style={styles.titleContainer}>
                 <ThemedText type="title">
                     {contact ? t('editContact') : t('addContact')}
                 </ThemedText>
-                <Button title={t("cancel")} onPress={onCancel} color={accent} />
+                <TextButton title={t("cancel")} onPress={onCancel} color={accent} type="defaultSemiBold" />
             </View>
             <Text style={[styles.label, { color }]}>Name</Text>
             <TextInput
@@ -104,7 +103,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             <Text style={[styles.label, { color }]}>birthdate</Text>
 
             {Platform.OS === 'android' && !showDatePicker && (
-                <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
+                <TextButton title="Select Date" onPress={() => setShowDatePicker(true)} color={accent} type="defaultSemiBold" />
             )}
             {(Platform.OS === 'ios' || showDatePicker) && (
                 <DateTimePicker
@@ -137,7 +136,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             <View style={{ flex: 1 }} />
 
             <PrimaryButton onPress={handleSubmit} text={t("save")} />
-        </ThemedView>
+        </ThemedSafeArea>
     );
 };
 
