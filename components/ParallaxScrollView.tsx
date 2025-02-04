@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { Dimensions, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { Dimensions, Platform, StatusBar, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -11,6 +11,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAccentStyle } from '@/contexts/HeaderStyleContext';
 import { useBottomTabOverflow } from './ui/TabBarBackground';
+import { getTabBarHeight } from '@react-navigation/bottom-tabs/lib/typescript/commonjs/src/views/BottomTabBar';
 
 const HEADER_HEIGHT = 240;
 
@@ -31,8 +32,9 @@ export default function ParallaxScrollView({
   const scrollOffset = useScrollViewOffset(scrollRef);
   const bottom = useBottomTabOverflow();
   const { colors: backgroundColor } = useAccentStyle();
-  const screen = Dimensions.get('screen');
-
+  const windowDimensions = Dimensions.get('window');
+  const extraHeight = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
+  const availableHeight = windowDimensions.height - extraHeight;
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -67,7 +69,7 @@ export default function ParallaxScrollView({
           ]}>
           {headerImage}
         </Animated.View>
-        <ThemedView style={[styles.content, { minHeight: screen.height - HEADER_HEIGHT - bottom }, style]}>{children}</ThemedView>
+        <ThemedView style={[styles.content, { minHeight: availableHeight - HEADER_HEIGHT - bottom }, style]}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );

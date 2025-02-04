@@ -20,6 +20,8 @@ const MAPPING = {
   'pencil': 'edit',
   'trash': 'delete',
   'dice': 'casino',
+  'message.fill': 'message',
+  'plus': 'add',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

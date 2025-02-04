@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Image, Alert, ImageURISource } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Image, Alert, ImageURISource, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from './ThemedText';
@@ -24,10 +24,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     const [phone, setPhone] = useState<string>(contact?.phone || '');
     const [email, setEmail] = useState<string>(contact?.email || '');
     const [photo, setPhoto] = useState<string>(contact?.photo || '');
-    const [birthdate, setbirthdate] = useState<Date | undefined>(contact?.birthdate ? new Date(contact.birthdate) : undefined);
+    const [birthdate, setBirthdate] = useState<Date | undefined>(contact?.birthdate ? new Date(contact.birthdate) : undefined);
     const { color: accent } = useAccentStyle();
     const { t } = useLanguage();
     const insets = useSafeAreaInsets();
+    const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -69,7 +70,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 <ThemedText type="title">
                     {contact ? t('editContact') : t('addContact')}
                 </ThemedText>
-                <Button title="Cancel" onPress={onCancel} color={accent} />
+                <Button title={t("cancel")} onPress={onCancel} color={accent} />
             </View>
             <Text style={[styles.label, { color }]}>Name</Text>
             <TextInput
@@ -101,12 +102,25 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             />
 
             <Text style={[styles.label, { color }]}>birthdate</Text>
-            <DateTimePicker
-                value={birthdate || new Date()}
-                mode="date"
-                display="default"
-                onChange={(event, selectedDate) => setbirthdate(selectedDate || birthdate)}
-            />
+
+            {Platform.OS === 'android' && !showDatePicker && (
+                <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
+            )}
+            {(Platform.OS === 'ios' || showDatePicker) && (
+                <DateTimePicker
+                    value={birthdate || new Date()}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        // En Android, ocultamos el picker cuando se cierra o se descarta
+                        if (Platform.OS === 'android') {
+                            setShowDatePicker(false);
+                        }
+                        setBirthdate(selectedDate || birthdate);
+                    }}
+                />
+            )}
+
 
             <Text style={[styles.label, { color }]}>Pick a Photo</Text>
             <View style={{ alignItems: 'center' }}>
@@ -122,7 +136,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
 
             <View style={{ flex: 1 }} />
 
-            <PrimaryButton onPress={handleSubmit} text="Save" />
+            <PrimaryButton onPress={handleSubmit} text={t("save")} />
         </ThemedView>
     );
 };

@@ -11,5 +11,12 @@
   "invalidPhone": "Invalid phone number.\nIt should contain only numbers and be between 10 and 15 digits.",
   "back": "Back",
   "addContact": "Add contact",
-  "editContact": "Edit contact"
+  "editContact": "Edit contact",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "confirmTitle": "Confirm",
+  "confirmDeleteMessage": "Are you sure you want to delete?",
+  "call": "Call",
+  "message": "Message",
+  "save": "Save"
 }

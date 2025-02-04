@@ -10,7 +10,7 @@ import Button from '../../components/ui/Button';
 import { IconSymbol } from '../../components/ui/IconSymbol';
 import ContactForm from '../../components/ContactForm';
 import { Contact } from '../../types/Contact';
-import { deleteContact, getContacts, saveContact, updateContact } from '../../db/sqliteService';
+import { getContacts, saveContact } from '../../db/sqliteService';
 import { useSQLiteContext } from 'expo-sqlite';
 import ContactCardList from '../../components/ContactCardList';
 import { useFocusEffect } from 'expo-router';
@@ -67,7 +67,7 @@ export default function HomeScreen() {
 
       <Modal
         animationType="slide"
-        transparent={true}
+        presentationStyle='overFullScreen'
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
@@ -82,6 +82,18 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+   modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 16,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StyleSheet, Image, ImageURISource, Modal, View } from 'react-native';
+import { StyleSheet, Image, ImageURISource, Modal, View, Alert } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type Contact } from '../types/Contact';
 import { useThemeColor } from '../hooks/useThemeColor';
@@ -15,6 +15,7 @@ import ContactForm from '../components/ContactForm';
 import { useState } from 'react';
 import Button from '../components/ui/Button';
 import ParallaxScrollView from '../components/ParallaxScrollView';
+import { useAccentStyle } from '../contexts/HeaderStyleContext';
 
 
 
@@ -27,10 +28,28 @@ export default function Contact() {
     const { t } = useLanguage();
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
+    const { color } = useAccentStyle();
 
     const handleDelete = async () => {
-        deleteContact(db, contact.id!);
-        router.back();
+        Alert.alert(
+            t('confirmTitle'),
+            t('confirmDeleteMessage'),
+            [
+                {
+                    text: t('cancel'),
+                    style: 'cancel',
+                },
+                {
+                    text: t('delete'),
+                    style: 'destructive',
+                    onPress: async () => {
+                        await deleteContact(db, contact.id!);
+                        router.back();
+                    },
+                },
+            ],
+            { cancelable: true }
+        );
     };
 
     const handleUpdate = async (updated: Contact) => {
@@ -70,7 +89,16 @@ export default function Contact() {
                 />
             </Modal>
 
-            <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
+            <ThemedView style={styles.titleContent}>
+                <ThemedText type="title" style={[styles.name, { color: textColor }]}>{contact.name}</ThemedText>
+
+                <Button style={[styles.titleButtons, { backgroundColor: "red" }]} onPress={handleDelete}>
+                    <IconSymbol name="trash" color={textColor} size={24} />
+                </Button>
+                <Button style={[styles.titleButtons, { backgroundColor: color }]} onPress={() => setModalVisible(true)}>
+                    <IconSymbol name="pencil" color={textColor} size={24} />
+                </Button>
+            </ThemedView>
             <ThemedView style={styles.textContainer}>
                 <IconSymbol name="phone.fill" color={textColor} size={24} />
                 <ThemedText type='defaultSemiBold' style={[styles.phone, { color: textColor }]}>{contact.phone}</ThemedText>
@@ -84,8 +112,8 @@ export default function Contact() {
                 <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
-                <PrimaryButton onPress={() => { setModalVisible(true) }} text='Edit' icon='pencil' />
-                <SecondaryButton onPress={handleDelete} text='Delete' icon='trash' />
+                <PrimaryButton style={[styles.actionButton]} onPress={() => { }} text={t("message")} icon='message.fill' />
+                <SecondaryButton style={[styles.actionButton]} onPress={() => { }} text={t("call")} icon='phone.fill' />
             </ThemedView>
         </ParallaxScrollView >
     );
@@ -121,8 +149,25 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        alignItems: "flex-end",
         gap: 8,
+    },
+    actionButton: {
+        flex: 1,
+    },
+    titleContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        marginBottom: 20,
+    },
+    titleButtons: {
+        borderRadius: 100,
+        aspectRatio: 1,
+        width: 42,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     textContainer: {
         flexDirection: 'row',
@@ -137,7 +182,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     name: {
-        marginBottom: 8,
+        flex: 1,
     },
     phone: {
         fontSize: 18,
