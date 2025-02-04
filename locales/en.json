@@ -18,5 +18,8 @@
   "confirmDeleteMessage": "Are you sure you want to delete?",
   "call": "Call",
   "message": "Message",
-  "save": "Save"
+  "save": "Save",
+  "birthdate": "Birthdate",
+  "name": "Name",
+  "phoneNumber": "Phone number"
 }

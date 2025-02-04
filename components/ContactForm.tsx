@@ -116,7 +116,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 )}
             </View>
 
-            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Name</ThemedText>
+            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("name")}</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
                 value={name}
@@ -125,7 +125,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 placeholderTextColor={color}
             />
 
-            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Phone</ThemedText>
+            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("phoneNumber")}</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
                 value={phone}
@@ -146,7 +146,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             />
 
             <ThemedView style={styles.birthdateContainer}>
-                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Birthdate</ThemedText>
+                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("birthdate")}</ThemedText>
 
                 {Platform.OS === 'android' &&
                     <TextButton

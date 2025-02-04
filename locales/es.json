@@ -18,5 +18,8 @@
   "confirmDeleteMessage": "¿Estás seguro de que quieres eliminar?",
   "message": "Mensaje",
   "call": "Llamar",
-  "save": "Guardar"
+  "save": "Guardar",
+  "birthdate": "Cumpleaños",
+  "name": "Nombre",
+  "phoneNumber": "Nº Telefono"
 }
