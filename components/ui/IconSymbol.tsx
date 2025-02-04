@@ -13,7 +13,7 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-  'chevron.backward' : 'chevron-left',
+  'chevron.backward': 'chevron-left',
   'gear': 'settings',
   'phone.fill': 'phone',
   'envelope.fill': 'email',
@@ -23,6 +23,7 @@ const MAPPING = {
   'dice': 'casino',
   'message.fill': 'message',
   'plus': 'add',
+  'camera': 'photo-camera',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

@@ -12,6 +12,9 @@ import { Contact } from '../types/Contact';
 import { ThemedSafeArea } from './ThemedSafeArea';
 import TextButton from './ui/TextButton';
 import * as FileSystem from 'expo-file-system';
+import { ThemedView } from './ThemedView';
+import Button from './ui/Button';
+import { IconSymbol } from './ui/IconSymbol';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
@@ -87,14 +90,33 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     };
 
     return (
+
         <ThemedSafeArea style={[styles.safeArea]}>
+
             <View style={styles.titleContainer}>
                 <ThemedText type="title">
                     {contact ? t('editContact') : t('addContact')}
                 </ThemedText>
                 <TextButton title={t("cancel")} onPress={onCancel} color={accent} type="defaultSemiBold" />
             </View>
-            <Text style={[styles.label, { color }]}>Name</Text>
+
+
+            <View style={styles.photoContainer}>
+                {photo ? (
+                    <View style={styles.photoWrapper}>
+                        <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
+                        <Button style={[styles.photoButton, { backgroundColor: accent }]} onPress={pickImage}>
+                            <IconSymbol name="pencil" color={color} size={24} />
+                        </Button>
+                    </View>
+                ) : (
+                    <Button style={styles.selectPhotoButton} onPress={pickImage}>
+                        <IconSymbol name="camera" size={24} color={color} />
+                    </Button>
+                )}
+            </View>
+
+            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Name</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
                 value={name}
@@ -103,7 +125,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 placeholderTextColor={color}
             />
 
-            <Text style={[styles.label, { color }]}>Phone</Text>
+            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Phone</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
                 value={phone}
@@ -113,7 +135,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 placeholderTextColor={color}
             />
 
-            <Text style={[styles.label, { color }]}>Email</Text>
+            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Email</ThemedText>
             <TextInput
                 style={[styles.input, { color }]}
                 value={email}
@@ -123,48 +145,35 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 placeholderTextColor={color}
             />
 
-            <Text style={[styles.label, { color }]}>Birthdate</Text>
+            <ThemedView style={styles.birthdateContainer}>
+                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Birthdate</ThemedText>
 
-            {Platform.OS === 'android' &&
-                <TextButton
-                    title={birthdate ? formatDate(birthdate) : "Select Date"}
-                    onPress={() => setShowDatePicker(true)}
-                    color={accent}
-                    type="defaultSemiBold"
-                />
-            }
-            {(Platform.OS === 'ios' || showDatePicker) && (
-                <DateTimePicker
-                    accentColor={accent}
-                    textColor={accent}
-                    value={birthdate || new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={(event, selectedDate) => {
-                        setBirthdate(selectedDate || birthdate);
-                        if (Platform.OS === 'android') {
-                            setShowDatePicker(false);
-                        }
-                    }}
-                />
-            )}
-
-
-            <Text style={[styles.label, { color }]}>Pick a Photo</Text>
-            <View style={{ alignItems: 'center' }}>
-                {photo ? (
-                    <View style={{ gap: 10, flexDirection: 'column', alignItems: 'center' }}>
-                        <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
-                        <SecondaryButton onPress={pickImage} text="Change Image" />
-                    </View>
-                ) : (
-                    <SecondaryButton onPress={pickImage} text="Pick Image" />
+                {Platform.OS === 'android' &&
+                    <TextButton
+                        title={birthdate ? formatDate(birthdate) : "+"}
+                        onPress={() => setShowDatePicker(true)}
+                        color={accent}
+                        type="defaultSemiBold"
+                    />
+                }
+                {(Platform.OS === 'ios' || showDatePicker) && (
+                    <DateTimePicker
+                        accentColor={accent}
+                        textColor={accent}
+                        value={birthdate || new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                            setBirthdate(selectedDate || birthdate);
+                            if (Platform.OS === 'android') {
+                                setShowDatePicker(false);
+                            }
+                        }}
+                    />
                 )}
-            </View>
+            </ThemedView>
 
-            <View style={{ flex: 1 }} />
-
-            <PrimaryButton onPress={handleSubmit} text={t("save")} />
+            <PrimaryButton style={styles.button} onPress={handleSubmit} text={t("save")} />
         </ThemedSafeArea>
     );
 };
@@ -191,13 +200,50 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         borderRadius: 5,
     },
-    photo: {
-        width: 100,
-        height: 100,
-        marginTop: 10,
+    photoContainer: {
+        alignItems: 'center',
+        marginVertical: 20,
     },
+    photoWrapper: {
+        position: 'relative',
+        width: 120,
+        height: 120,
+    },
+    photo: {
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+    },
+    photoButton: {
+        position: 'absolute',
+        top: 4,
+        right: 4,
+        zIndex: 1,
+        borderRadius: 6,
+        aspectRatio: 1,
+        width: 28,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+    },
+    selectPhotoButton: {
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.2)',
+    },
+
+    birthdateContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+
     button: {
-        marginTop: 20,
+        marginTop: "auto",
     },
 });
 
