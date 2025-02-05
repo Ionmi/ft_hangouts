@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import TooltipAlert from '../components/TooltipAlert';
-import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
 import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDbIfNeeded } from '../db/init';
@@ -35,7 +35,7 @@ export default function RootLayout() {
 
   return (
     <SQLiteProvider databaseName="contacts.db" onInit={migrateDbIfNeeded}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <SafeAreaProvider>
         <HeaderStyleProvider>
           <LanguageProvider>
             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
