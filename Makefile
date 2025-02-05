@@ -19,3 +19,6 @@ clean:
 	rm -rf node_modules
 
 .PHONY: all start install clean upgrade
+
+# expo prebuild --clean
+# expo start --clear
