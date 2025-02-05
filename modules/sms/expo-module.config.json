@@ -1,12 +1,17 @@
 {
-  "platforms": ["apple", "android", "web"],
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
   "apple": {
-    "modules": ["SmsModule"]
+    "modules": [
+      "SmsModule"
+    ]
   },
   "android": {
-    "modules": ["expo.modules.sms.SmsModule"]
-  },
-  "expo": {
-    "plugins": ["./plugin/withSmsPermissions"]
+    "modules": [
+      "expo.modules.sms.SmsModule"
+    ]
   }
 }

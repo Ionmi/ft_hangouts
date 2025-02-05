@@ -1,16 +1,15 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
+import { StyleSheet, NativeModules } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { sendSms } from '../../modules/sms';
+
 
 export default function TabTwoScreen() {
 
-  const {t} = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <ParallaxScrollView
@@ -25,7 +24,8 @@ export default function TabTwoScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("messages")}</ThemedText>
       </ThemedView>
-     
+
+      <ThemedText type="title">{sendSms("hola")}</ThemedText>
     </ParallaxScrollView>
   );
 }

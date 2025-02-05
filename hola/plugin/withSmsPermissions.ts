@@ -2,7 +2,16 @@ import { ConfigPlugin, withAndroidManifest } from "@expo/config-plugins";
 
 const withSmsPermissions: ConfigPlugin = (config) => {
     return withAndroidManifest(config, async (config) => {
-        const androidManifest = config.modResults;
+        const androidManifest: {
+            manifest: {
+                $: { [key: string]: string | undefined; 'xmlns:android': string; 'xmlns:tools'?: string; package?: string };
+                'uses-permission'?: { $: { 'android:name': string } }[];
+                receiver?: {
+                    $: { 'android:name': string; 'android:exported': string };
+                    'intent-filter': { action: { $: { 'android:name': string } }[] }[];
+                }[];
+            };
+        } = config.modResults;
 
         // Agregar permisos si no están ya en el AndroidManifest.xml
         const permissions = [
