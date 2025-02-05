@@ -1,4 +1,5 @@
 import { NativeModule, requireNativeModule } from 'expo';
+
 import { SmsModuleEvents } from './Sms.types';
 
 declare class SmsModule extends NativeModule<SmsModuleEvents> {

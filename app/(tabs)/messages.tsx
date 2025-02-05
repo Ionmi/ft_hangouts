@@ -1,13 +1,14 @@
-import { StyleSheet, NativeModules } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { sendSms } from '../../modules/sms';
+import SmsModule from '../../modules/sms/src/SmsModule';
 
 
-export default function TabTwoScreen() {
+
+export default function MessagesScreen() {
 
   const { t } = useLanguage();
 
@@ -25,7 +26,7 @@ export default function TabTwoScreen() {
         <ThemedText type="title">{t("messages")}</ThemedText>
       </ThemedView>
 
-      <ThemedText type="title">{sendSms("hola")}</ThemedText>
+      <ThemedText type="title">{SmsModule.PI}</ThemedText>
     </ParallaxScrollView>
   );
 }
