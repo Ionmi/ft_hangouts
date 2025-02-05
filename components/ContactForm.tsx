@@ -14,6 +14,7 @@ import * as FileSystem from 'expo-file-system';
 import { ThemedView } from './ThemedView';
 import Button from './ui/Button';
 import { IconSymbol } from './ui/IconSymbol';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 interface ContactFormProps {
     onSubmit: (contact: Contact) => void;
@@ -87,94 +88,97 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     };
     return (
 
-        <ThemedSafeArea style={[styles.safeArea]}>
+        <SafeAreaProvider>
 
-            <View style={styles.titleContainer}>
-                <ThemedText type="title">
-                    {contact ? t('editContact') : t('addContact')}
-                </ThemedText>
-                <TextButton title={t("cancel")} onPress={onCancel} color={accent} type="defaultSemiBold" />
-            </View>
+            <ThemedSafeArea style={[styles.safeArea]}>
+
+                <View style={styles.titleContainer}>
+                    <ThemedText type="title">
+                        {contact ? t('editContact') : t('addContact')}
+                    </ThemedText>
+                    <TextButton title={t("cancel")} onPress={onCancel} color={accent} type="defaultSemiBold" />
+                </View>
 
 
-            <View style={styles.photoContainer}>
-                {photo ? (
-                    <View style={styles.photoWrapper}>
-                        <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
-                        <Button style={[styles.photoButton, { backgroundColor: accent }]} onPress={pickImage}>
-                            <IconSymbol name="pencil" color={color} size={24} />
+                <View style={styles.photoContainer}>
+                    {photo ? (
+                        <View style={styles.photoWrapper}>
+                            <Image source={{ uri: photo } as ImageURISource} style={styles.photo} />
+                            <Button style={[styles.photoButton, { backgroundColor: accent }]} onPress={pickImage}>
+                                <IconSymbol name="pencil" color={color} size={24} />
+                            </Button>
+                        </View>
+                    ) : (
+                        <Button style={styles.selectPhotoButton} onPress={pickImage}>
+                            <IconSymbol name="camera" size={24} color={color} />
                         </Button>
-                    </View>
-                ) : (
-                    <Button style={styles.selectPhotoButton} onPress={pickImage}>
-                        <IconSymbol name="camera" size={24} color={color} />
-                    </Button>
-                )}
-            </View>
+                    )}
+                </View>
 
-            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("name")}</ThemedText>
-            <TextInput
-                style={[styles.input, { color }]}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter name"
-                placeholderTextColor={color}
-                autoCorrect={false}
-            />
+                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("name")}</ThemedText>
+                <TextInput
+                    style={[styles.input, { color }]}
+                    value={name}
+                    onChangeText={setName}
+                    placeholder="Enter name"
+                    placeholderTextColor={color}
+                    autoCorrect={false}
+                />
 
-            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("phoneNumber")}</ThemedText>
-            <TextInput
-                style={[styles.input, { color }]}
-                value={
-                    phone && !phone.startsWith('+') ? '+' + phone : phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                placeholder={t("phoneNumber")}
-                placeholderTextColor={color}
-            />
+                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("phoneNumber")}</ThemedText>
+                <TextInput
+                    style={[styles.input, { color }]}
+                    value={
+                        phone && !phone.startsWith('+') ? '+' + phone : phone}
+                    onChangeText={setPhone}
+                    keyboardType="phone-pad"
+                    placeholder={t("phoneNumber")}
+                    placeholderTextColor={color}
+                />
 
-            <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Email</ThemedText>
-            <TextInput
-                style={[styles.input, { color }]}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                placeholder="Email"
-                placeholderTextColor={color}
-                autoCorrect={false}
-                autoCapitalize="none"
-            />
+                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>Email</ThemedText>
+                <TextInput
+                    style={[styles.input, { color }]}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    placeholder="Email"
+                    placeholderTextColor={color}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                />
 
-            <ThemedView style={styles.birthdateContainer}>
-                <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("birthdate")}</ThemedText>
+                <ThemedView style={styles.birthdateContainer}>
+                    <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("birthdate")}</ThemedText>
 
-                {Platform.OS === 'android' &&
-                    <TextButton
-                        title={birthdate ? formatDate(birthdate) : "+"}
-                        onPress={() => setShowDatePicker(true)}
-                        color={accent}
-                        type="defaultSemiBold"
-                    />
-                }
-                {(Platform.OS === 'ios' || showDatePicker) && (
-                    <DateTimePicker
-                        accentColor={accent}
-                        textColor={accent}
-                        value={birthdate || new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={(event, selectedDate) => {
-                            setBirthdate(selectedDate || birthdate);
-                            if (Platform.OS === 'android') {
-                                setShowDatePicker(false);
-                            }
-                        }}
-                    />
-                )}
-            </ThemedView>
+                    {Platform.OS === 'android' &&
+                        <TextButton
+                            title={birthdate ? formatDate(birthdate) : "+"}
+                            onPress={() => setShowDatePicker(true)}
+                            color={accent}
+                            type="defaultSemiBold"
+                        />
+                    }
+                    {(Platform.OS === 'ios' || showDatePicker) && (
+                        <DateTimePicker
+                            accentColor={accent}
+                            textColor={accent}
+                            value={birthdate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={(event, selectedDate) => {
+                                setBirthdate(selectedDate || birthdate);
+                                if (Platform.OS === 'android') {
+                                    setShowDatePicker(false);
+                                }
+                            }}
+                        />
+                    )}
+                </ThemedView>
 
-            <PrimaryButton style={styles.button} onPress={handleSubmit} text={t("save")} />
-        </ThemedSafeArea>
+                <PrimaryButton style={styles.button} onPress={handleSubmit} text={t("save")} />
+            </ThemedSafeArea>
+        </SafeAreaProvider>
     );
 };
 

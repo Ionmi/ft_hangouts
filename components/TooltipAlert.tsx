@@ -7,7 +7,6 @@ import {
     AppState,
     AppStateStatus,
     View,
-    SafeAreaView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLanguage } from '../contexts/LanguageContext';

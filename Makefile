@@ -1,7 +1,7 @@
 # Makefile for running Expo with Bun
 
 # Default target
-all: start
+all: install start
 
 # Start Expo with Bun
 start:
