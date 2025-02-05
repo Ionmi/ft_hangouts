@@ -5,7 +5,7 @@ all: install start
 
 # Start Expo with Bun
 start:
-	bun run ios
+	bun run android
 
 # Install dependencies
 install:
