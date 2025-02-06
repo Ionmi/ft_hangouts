@@ -4,10 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
-
-
-
-
+import SmsModule from '../../modules/sms';
 
 export default function MessagesScreen() {
 
@@ -27,7 +24,7 @@ export default function MessagesScreen() {
         <ThemedText type="title">{t("messages")}</ThemedText>
       </ThemedView>
 
-      {/* <ThemedText type="title">{SmsModule.PI}</ThemedText> */}
+      <ThemedText type="title">{SmsModule.PI}</ThemedText>
     </ParallaxScrollView>
   );
 }
