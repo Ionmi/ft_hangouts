@@ -21,11 +21,12 @@ class SmsReceiver() : BroadcastReceiver() {
                 val pdus = bundle.get("pdus") as Array<Any>
                 for (pdu in pdus) {
                     val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
-                    val sender = smsMessage.displayOriginatingAddress
+                    val address = smsMessage.displayOriginatingAddress
                     val messageBody = smsMessage.messageBody
+                    val date = smsMessage.timestampMillis
                     // Asegurar que module está inicializado antes de usarlo
                     if (::module.isInitialized) {
-                        module.sendEvent("onSmsReceived", mapOf("sender" to sender, "message" to messageBody))
+                        module.sendEvent("onSmsReceived", mapOf("address" to address, "body" to messageBody, "date" to date))
                     }
                 }
             }

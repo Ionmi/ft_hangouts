@@ -1,17 +1,17 @@
 import { EventSubscription } from 'expo-modules-core';
 import SmsModule from './src/SmsModule';
 
-export type SmsReceivedEvent = { sender: string; message: string };
+export type Sms = { address: string; body: string, date: number };
 
 export function addSmsListener(
     eventName: 'onSmsReceived',
-    listener: (event: SmsReceivedEvent) => void
+    listener: (event: Sms) => void
 ): EventSubscription {
     return SmsModule.addListener(eventName, listener);
 }
 
-export async function readSMS(): Promise<string[]> {
-    return SmsModule.readSMS();
+export async function readSMS(): Promise<Sms[]> {
+    return SmsModule.readSMS()
 }
 
 export async function sendSMS(phoneNumber: string, message: string): Promise<boolean> {

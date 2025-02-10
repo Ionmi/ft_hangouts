@@ -1,24 +1,21 @@
 import React, { ReactNode, useEffect } from "react";
-import { addSmsListener, readSMS } from "../modules/sms";
+import { addSmsListener, readSMS, Sms } from "../modules/sms";
 import { useLanguage } from "./LanguageContext";
 
-const SmsContext = React.createContext<{ messages: string[]; setMessages: React.Dispatch<React.SetStateAction<string[]>> } | undefined>(undefined);
+const SmsContext = React.createContext<{ messages: Sms[]; setMessages: React.Dispatch<React.SetStateAction<Sms[]>> } | undefined>(undefined);
 
 interface SmsProviderProps {
     children: ReactNode;
 }
 
 export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
-    const [messages, setMessages] = React.useState<string[]>([]);
+    const [messages, setMessages] = React.useState<Sms[]>([]);
     const { t } = useLanguage();
 
     useEffect(() => {
-        const handleSmsReceived = (event: { sender: string; message: string }) => {
+        const handleSmsReceived = (event: { address: string; body: string, date: number }) => {
             console.log('Received SMS event:', event);
-            setMessages(prev => [
-                `From: ${event.sender}, Message: ${event.message}`,
-                ...prev,
-            ]);
+            setMessages((prev) => [...prev, event]);
         };
 
         // Directly use SmsModule.addListener as it is already an EventEmitter.

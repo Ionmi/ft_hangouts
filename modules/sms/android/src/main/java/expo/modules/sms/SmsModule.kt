@@ -70,7 +70,9 @@ class SmsModule : Module() {
                 do {
                     val address = it.getString(it.getColumnIndex("address"))
                     val body = it.getString(it.getColumnIndex("body"))
-                    smsList.add("From: $address, Message: $body")
+                    val date = it.getString(it.getColumnIndex("date"))
+                    val json = "{ \"address\": \"$address\", \"body\": \"$body\", \"date\": $date }"
+                    smsList.add(json)
                 } while (it.moveToNext())
             }
         }
