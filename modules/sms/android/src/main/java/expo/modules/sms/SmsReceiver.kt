@@ -23,13 +23,9 @@ class SmsReceiver() : BroadcastReceiver() {
                     val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
                     val sender = smsMessage.displayOriginatingAddress
                     val messageBody = smsMessage.messageBody
-                    android.util.Log.d("SmsReceiver", "SMS Received from $sender: $messageBody")
                     // Asegurar que module está inicializado antes de usarlo
                     if (::module.isInitialized) {
                         module.sendEvent("onSmsReceived", mapOf("sender" to sender, "message" to messageBody))
-                        android.util.Log.d("SmsReceiver", "Event sent: sender=$sender, message=$messageBody")
-                    } else {
-                        android.util.Log.e("SmsReceiver", "Module is not initialized")
                     }
                 }
             }

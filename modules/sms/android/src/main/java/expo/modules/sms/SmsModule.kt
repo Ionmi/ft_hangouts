@@ -17,15 +17,7 @@ class SmsModule : Module() {
     override fun definition() = ModuleDefinition {
         Name("Sms")
 
-        Constants(
-            "PI" to Math.PI,
-        )
-
         Events("onSmsReceived")
-
-        Function("hello") {
-            "Hello world! 👋"
-        }
 
         AsyncFunction("sendSMS") { phoneNumber: String, message: String ->
             try {
@@ -68,7 +60,6 @@ class SmsModule : Module() {
                 do {
                     val address = it.getString(it.getColumnIndex("address"))
                     val body = it.getString(it.getColumnIndex("body"))
-                    android.util.Log.d("SmsModule", "From: $address, Message: $body")
                     smsList.add("From: $address, Message: $body")
                 } while (it.moveToNext())
             }
