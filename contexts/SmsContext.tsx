@@ -13,15 +13,10 @@ export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
     const { t } = useLanguage();
 
     useEffect(() => {
-        const handleSmsReceived = (event: { address: string; body: string, date: number }) => {
-            console.log('Received SMS event:', event);
-            setMessages((prev) => [...prev, event]);
-        };
+        const handleSmsReceived = (event: Sms) => setMessages((prev) => [event, ...prev])
 
-        // Directly use SmsModule.addListener as it is already an EventEmitter.
         const subscription = addSmsListener('onSmsReceived', handleSmsReceived);
 
-        // Read existing SMS messages.
         readSMS().then(setMessages);
 
 

@@ -6,6 +6,15 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
 import { useSms } from '../../contexts/SmsContext';
+import { Sms } from '../../modules/sms';
+
+const row = (message: Sms) => {
+  return (
+    <ThemedView style={styles.messageContainer}>
+      <ThemedText>{message.body}</ThemedText>
+    </ThemedView>
+  );
+}
 
 export default function MessagesScreen() {
   const { t } = useLanguage();
@@ -27,8 +36,10 @@ export default function MessagesScreen() {
       </ThemedView>
       {messages.map((message, index) => (
         <ThemedView key={index} style={styles.messageContainer}>
-          <ThemedText>{message}</ThemedText>
+          <ThemedText>{message.body}</ThemedText>
+          {/* {row(message)} */}
         </ThemedView>
+        
       ))}
     </ParallaxScrollView>
   );
