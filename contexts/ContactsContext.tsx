@@ -64,7 +64,11 @@ export const ContactsProvider = ({ children }: { children: ReactNode }) => {
     }
 
     useEffect(() => {
-        const contactsWithMessages = addMessagesToContacts(contacts, messages);
+        const contactsWithMessages = addMessagesToContacts(contacts, messages).sort((a, b) => {
+            const aDate = a.messages[0].date;
+            const bDate = b.messages[0].date;
+            return bDate - aDate;
+        });
         setContactsWithMessages(contactsWithMessages);
     }, [contacts]);
 

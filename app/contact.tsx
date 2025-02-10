@@ -67,11 +67,21 @@ export default function Contact() {
         <ParallaxScrollView
             header={
                 <SafeAreaView style={[styles.header, { paddingTop: insets.top }]}>
-                    <View style={[styles.headerContent,]}>
+                    <View style={[styles.headerContent]}>
                         <Button onPress={() => router.back()} style={styles.backButton}>
                             <IconSymbol name="chevron.backward" color={textColor} size={24} />
                         </Button>
-                        <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
+                        {contact.photo !== "" ?
+                            <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} /> :
+                            <View style={styles.container}>
+                                {contact.photo !== "" ?
+                                    <Image source={{ uri: contact.photo } as ImageURISource} style={styles.iconPhoto} /> :
+                                    <View style={styles.iconContainer}>
+                                        <IconSymbol name="person" size={100} color="black" style={styles.icon} />
+                                    </View>
+                                }
+                            </View>
+                        }
                     </View>
                 </SafeAreaView>
             }
@@ -204,5 +214,25 @@ const styles = StyleSheet.create({
     },
     birthdate: {
         fontSize: 16,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconPhoto: {
+        width: 100,
+        height: 100,
+    },
+    iconContainer: {
+        width: 100,
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    icon: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
     },
 });
