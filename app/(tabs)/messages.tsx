@@ -6,26 +6,28 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
 import SmsModule from '../../modules/sms';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
+import { DeviceEventEmitter } from 'react-native';
 
 export default function MessagesScreen() {
   const { t } = useLanguage();
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    const requestSmsPermission = async () => {
+    const requestSmsPermissions = async () => {
       try {
         if (Platform.OS === 'android') {
-          const granted = await PermissionsAndroid.request(
+          const permissions = [
             PermissionsAndroid.PERMISSIONS.READ_SMS,
-            {
-              title: t("smsPermissionTitle"),
-              message: t("smsPermissionMessage"),
-              buttonNeutral: t("smsPermissionAskMeLater"),
-              buttonNegative: t("smsPermissionCancel"),
-              buttonPositive: t("smsPermissionOk"),
-            }
+            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+          ];
+
+          const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
+
+          const allGranted = permissions.every(permission =>
+            grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
           );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+          if (allGranted) {
             fetchMessages();
           } else {
             Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
@@ -47,8 +49,23 @@ export default function MessagesScreen() {
       }
     };
 
-    requestSmsPermission();
+    const handleSmsReceived = (event: any) => {
+      console.log('Received SMS event:', event);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        `From: ${event.sender}, Message: ${event.message}`,
+      ]);
+    };
+
+    const subscription = DeviceEventEmitter.addListener('onSmsReceived', handleSmsReceived);
+
+    requestSmsPermissions();
+
+    return () => {
+      subscription.remove();
+    };
   }, [t]);
+
 
   return (
     <ParallaxScrollView
@@ -66,14 +83,11 @@ export default function MessagesScreen() {
 
       <ThemedText type="title">{SmsModule.PI}</ThemedText>
 
-      {messages.map((message, index) => {
-        return (
-          <ThemedView key={index} style={styles.messageContainer}>
-            <ThemedText>{message}</ThemedText>
-          </ThemedView>
-        )
-      })}
-
+      {messages.map((message, index) => (
+        <ThemedView key={index} style={styles.messageContainer}>
+          <ThemedText>{message}</ThemedText>
+        </ThemedView>
+      ))}
     </ParallaxScrollView>
   );
 }

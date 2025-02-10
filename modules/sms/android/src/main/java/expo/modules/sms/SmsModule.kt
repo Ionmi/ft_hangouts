@@ -8,6 +8,7 @@ import android.net.Uri
 import android.telephony.SmsMessage
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import expo.modules.kotlin.events.EventEmitter
 
 class SmsModule : Module() {
 
@@ -20,7 +21,7 @@ class SmsModule : Module() {
             "PI" to Math.PI,
         )
 
-        Events("onChange")
+        Events("onSmsReceived")
 
         Function("hello") {
             "Hello world! 👋"
@@ -46,9 +47,8 @@ class SmsModule : Module() {
             appContext.reactContext?.let { readSms(it) } ?: throw Exception("Context is null")
         }
 
-        // Initialize the receiver within the definition block
         OnCreate {
-            smsReceiver = SmsReceiver()
+            smsReceiver = SmsReceiver().apply { this.module = this@SmsModule }
             val intentFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
             appContext.reactContext?.registerReceiver(smsReceiver, intentFilter)
         }
@@ -68,6 +68,7 @@ class SmsModule : Module() {
                 do {
                     val address = it.getString(it.getColumnIndex("address"))
                     val body = it.getString(it.getColumnIndex("body"))
+                    android.util.Log.d("SmsModule", "From: $address, Message: $body")
                     smsList.add("From: $address, Message: $body")
                 } while (it.moveToNext())
             }
@@ -75,21 +76,24 @@ class SmsModule : Module() {
         return smsList
     }
 
-    inner class SmsReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == "android.provider.Telephony.SMS_RECEIVED") {
-                val bundle = intent.extras
-                if (bundle != null) {
-                    val pdus = bundle.get("pdus") as Array<Any>
-                    for (pdu in pdus) {
-                        val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
-                        val sender = smsMessage.displayOriginatingAddress
-                        val messageBody = smsMessage.messageBody
-                        // Handle the received SMS message
-                        // You can send this data to your Expo app using events
-                    }
-                }
-            }
-        }
-    }
+    // inner class SmsReceiver : BroadcastReceiver() {
+    //     override fun onReceive(context: Context, intent: Intent) {
+    //         if (intent.action == "android.provider.Telephony.SMS_RECEIVED") {
+    //             android.util.Log.d("SmsReceiver", "SMS Received")
+    //             val bundle = intent.extras
+    //             if (bundle != null) {
+    //                 val pdus = bundle.get("pdus") as Array<Any>
+    //                 for (pdu in pdus) {
+    //                     val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
+    //                     val sender = smsMessage.displayOriginatingAddress
+    //                     val messageBody = smsMessage.messageBody
+    //                     // Log the received message
+    //                     android.util.Log.d("SmsReceiver", "Received SMS: $sender, $messageBody")
+    //                     // Send event to JavaScript
+    //                     this@SmsModule.sendEvent("onSmsReceived", mapOf("sender" to sender, "message" to messageBody))
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }

@@ -15,9 +15,23 @@
 9-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:6:22-64
 10
 11    <application>
-11-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:8:5-10:19
-12
-13        <!-- Module-specific components can be declared here -->
-14    </application>
-15
-16</manifest>
+11-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:8:5-18:19
+12        <receiver
+12-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:9:9-16:12
+13            android:name="expo.modules.sms.SmsReceiver"
+13-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:10:5-32
+14            android:exported="true"
+14-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:12:5-28
+15            android:permission="android.permission.BROADCAST_SMS" >
+15-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:11:5-58
+16            <intent-filter android:priority="999" >
+16-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:13:5-15:21
+16-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:13:20-42
+17                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+17-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:14:9-74
+17-->/Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:14:17-71
+18            </intent-filter>
+19        </receiver>
+20    </application>
+21
+22</manifest>

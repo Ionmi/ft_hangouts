@@ -1,7 +1,7 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:1:1-11:12
-INJECTED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:1:1-11:12
+ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:1:1-19:12
+INJECTED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:1:1-19:12
 	package
 		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:2:5-31
 		INJECTED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml
@@ -20,7 +20,23 @@ ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/
 	android:name
 		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:6:22-64
 application
-ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:8:5-10:19
+ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:8:5-18:19
+receiver#expo.modules.sms.SmsReceiver
+ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:9:9-16:12
+	android:exported
+		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:12:5-28
+	android:permission
+		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:11:5-58
+	android:name
+		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:10:5-32
+intent-filter#action:name:android.provider.Telephony.SMS_RECEIVED
+ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:13:5-15:21
+	android:priority
+		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:13:20-42
+action#android.provider.Telephony.SMS_RECEIVED
+ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:14:9-74
+	android:name
+		ADDED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml:14:17-71
 uses-sdk
 INJECTED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/ionmi/Development/42/ft_hangouts/modules/sms/android/src/main/AndroidManifest.xml

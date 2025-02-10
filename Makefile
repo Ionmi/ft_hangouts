@@ -3,6 +3,7 @@
 # Default target
 all: install start
 
+re: clean_andorid install start
 # Start Expo with Bun
 start:
 	bun run android
@@ -13,6 +14,9 @@ install:
 
 upgrade:
 	bunx expo install --fix
+
+clean_andorid:
+	rm -rf android
 
 # Clean project
 clean:
