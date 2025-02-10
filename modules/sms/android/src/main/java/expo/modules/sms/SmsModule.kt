@@ -75,25 +75,4 @@ class SmsModule : Module() {
         }
         return smsList
     }
-
-    // inner class SmsReceiver : BroadcastReceiver() {
-    //     override fun onReceive(context: Context, intent: Intent) {
-    //         if (intent.action == "android.provider.Telephony.SMS_RECEIVED") {
-    //             android.util.Log.d("SmsReceiver", "SMS Received")
-    //             val bundle = intent.extras
-    //             if (bundle != null) {
-    //                 val pdus = bundle.get("pdus") as Array<Any>
-    //                 for (pdu in pdus) {
-    //                     val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
-    //                     val sender = smsMessage.displayOriginatingAddress
-    //                     val messageBody = smsMessage.messageBody
-    //                     // Log the received message
-    //                     android.util.Log.d("SmsReceiver", "Received SMS: $sender, $messageBody")
-    //                     // Send event to JavaScript
-    //                     this@SmsModule.sendEvent("onSmsReceived", mapOf("sender" to sender, "message" to messageBody))
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 }

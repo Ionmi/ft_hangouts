@@ -4,68 +4,58 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
-import SmsModule from '../../modules/sms';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
-import { DeviceEventEmitter } from 'react-native';
+import { useEventListener } from 'expo';
+import * as Sms from '../../modules/sms';
 
 export default function MessagesScreen() {
   const { t } = useLanguage();
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
+    const handleSmsReceived = (event: { sender: string; message: string }) => {
+      console.log('Received SMS event:', event);
+      setMessages(prev => [
+        `From: ${event.sender}, Message: ${event.message}`,
+        ...prev,
+      ]);
+    };
+
+    // Directly use SmsModule.addListener as it is already an EventEmitter.
+    const subscription = Sms.addSmsListener('onSmsReceived', handleSmsReceived);
+    console.log('SMS listener added');
+
+    // Request permissions and fetch SMS messages
     const requestSmsPermissions = async () => {
       try {
         if (Platform.OS === 'android') {
           const permissions = [
             PermissionsAndroid.PERMISSIONS.READ_SMS,
-            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
           ];
-
           const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
-
-          const allGranted = permissions.every(permission =>
-            grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
+          const allGranted = permissions.every(
+            permission => grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
           );
-
           if (allGranted) {
-            fetchMessages();
+            const smsMessages = await Sms.readSMS();
+            setMessages(smsMessages);
           } else {
             Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
           }
-        } else {
-          fetchMessages();
         }
       } catch (err) {
         console.warn(err);
       }
     };
 
-    const fetchMessages = async () => {
-      try {
-        const smsMessages = await SmsModule.readSMS();
-        setMessages(smsMessages);
-      } catch (error) {
-        console.error("Failed to read SMS messages:", error);
-      }
-    };
-
-    const handleSmsReceived = (event: any) => {
-      console.log('Received SMS event:', event);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        `From: ${event.sender}, Message: ${event.message}`,
-      ]);
-    };
-
-    const subscription = DeviceEventEmitter.addListener('onSmsReceived', handleSmsReceived);
-
     requestSmsPermissions();
 
     return () => {
+      console.log('Cleaning up SMS listener');
       subscription.remove();
     };
   }, [t]);
-
 
   return (
     <ParallaxScrollView
@@ -80,9 +70,6 @@ export default function MessagesScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("messages")}</ThemedText>
       </ThemedView>
-
-      <ThemedText type="title">{SmsModule.PI}</ThemedText>
-
       {messages.map((message, index) => (
         <ThemedView key={index} style={styles.messageContainer}>
           <ThemedText>{message}</ThemedText>
@@ -94,10 +81,10 @@ export default function MessagesScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: '#000',
-    bottom: -50,
-    left: 20,
     position: 'absolute',
+    left: 20,
+    bottom: -50,
+    color: '#000',
   },
   titleContainer: {
     flexDirection: 'row',
