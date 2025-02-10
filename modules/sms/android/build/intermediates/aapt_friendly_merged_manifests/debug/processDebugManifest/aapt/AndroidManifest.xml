@@ -4,4 +4,13 @@
 
     <uses-sdk android:minSdkVersion="24" />
 
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <application>
+
+        <!-- Module-specific components can be declared here -->
+    </application>
+
 </manifest>

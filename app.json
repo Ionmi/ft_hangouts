@@ -17,7 +17,12 @@
         "foregroundImage": "./assets/images/42.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.ft_hangouts"
+      "package": "com.anonymous.ft_hangouts",
+      "permissions": [
+        "RECEIVE_SMS",
+        "READ_SMS",
+        "SEND_SMS"
+      ]
     },
     "web": {
       "bundler": "metro",
