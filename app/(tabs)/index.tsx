@@ -9,46 +9,23 @@ import Button from '../../components/ui/Button';
 import { IconSymbol } from '../../components/ui/IconSymbol';
 import ContactForm from '../../components/ContactForm';
 import { Contact } from '../../types/Contact';
-import { getContacts, saveContact } from '../../db/sqliteService';
-import { useSQLiteContext } from 'expo-sqlite';
 import ContactCardList from '../../components/ContactCardList';
-import { useFocusEffect } from 'expo-router';
+import { useContacts } from '../../contexts/ContactsContext';
 
 export default function HomeScreen() {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const { contacts, saveContact } = useContacts()
   const { t } = useLanguage();
   const { color } = useAccentStyle();
   const [modalVisible, setModalVisible] = useState(false);
-  const db = useSQLiteContext();
-
-  const fetchContacts = async () => {
-    const result = await getContacts(db);
-    setContacts(result);
-  };
-  useEffect(() => {
-    // Fetch contacts on component mount
-    fetchContacts();
-  }, []);  // Empty dependency ensures this only runs once
 
   const handleFormSubmit = async (contact: Contact) => {
     try {
-      // Save the new contact and refresh the list
-      await saveContact(db, contact);
+      await saveContact( contact);
       setModalVisible(false);
-      const updatedContacts = await getContacts(db);
-      setContacts(updatedContacts);
     } catch (error) {
       console.error("Error saving contact: ", error);
     }
   };
-
-
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchContacts();
-    }, [])
-  );
-
 
   return (
     <ParallaxScrollView

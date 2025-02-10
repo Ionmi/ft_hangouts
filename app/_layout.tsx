@@ -15,6 +15,7 @@ import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDbIfNeeded } from '../db/init';
 import { SmsProvider } from '../contexts/SmsContext';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
+import { ContactsProvider } from '../contexts/ContactsContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -65,19 +66,21 @@ export default function RootLayout() {
     <SQLiteProvider databaseName="contacts.db" onInit={migrateDbIfNeeded}>
       <SafeAreaProvider>
         <HeaderStyleProvider>
-          <LanguageProvider>
-            <SmsProvider>
-              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <TooltipAlert />
-                <Stack>
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen name="contact" options={{ headerShown: false }} />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-                <StatusBar style="auto" />
-              </ThemeProvider>
-            </SmsProvider>
-          </LanguageProvider>
+          <ContactsProvider>
+            <LanguageProvider>
+              <SmsProvider>
+                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                  <TooltipAlert />
+                  <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="contact" options={{ headerShown: false }} />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                  <StatusBar style="auto" />
+                </ThemeProvider>
+              </SmsProvider>
+            </LanguageProvider>
+          </ContactsProvider>
         </HeaderStyleProvider>
       </SafeAreaProvider>
     </SQLiteProvider>

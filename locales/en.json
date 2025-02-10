@@ -22,5 +22,6 @@
   "birthdate": "Birthdate",
   "name": "Name",
   "phoneNumber": "Phone number",
-  "messages": "Messages"
+  "messages": "Messages",
+  "invalidEmail": "Invalid email"
 }

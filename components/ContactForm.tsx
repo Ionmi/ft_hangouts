@@ -64,8 +64,13 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
     };
 
     const validatePhoneNumber = (phone: string) => {
-        const phoneRegex = /^[0-9]{10,15}$/;
+        const phoneRegex = /^\+?[0-9]{10,15}$/;
         return phoneRegex.test(phone);
+    };
+
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
     const formatDate = (date: Date) => date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
@@ -81,24 +86,26 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
             return;
         }
 
+        if (!validateEmail(email)) {
+            Alert.alert('Error', t('invalidEmail'));
+            return;
+        }
+
         // Remove the leading "+" for storage
         const phoneToSave = phone.startsWith('+') ? phone.slice(1) : phone;
 
         onSubmit({ name, phone: phoneToSave, email, photo, birthdate: formatDate(birthdate) });
     };
+
     return (
-
         <SafeAreaProvider>
-
             <ThemedSafeArea style={[styles.safeArea]}>
-
                 <View style={styles.titleContainer}>
                     <ThemedText type="title">
                         {contact ? t('editContact') : t('addContact')}
                     </ThemedText>
                     <TextButton title={t("cancel")} onPress={onCancel} color={accent} type="defaultSemiBold" />
                 </View>
-
 
                 <View style={styles.photoContainer}>
                     {photo ? (
@@ -128,8 +135,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit, onCancel, contact }
                 <ThemedText type="defaultSemiBold" style={[styles.label, { color }]}>{t("phoneNumber")}</ThemedText>
                 <TextInput
                     style={[styles.input, { color }]}
-                    value={
-                        phone && !phone.startsWith('+') ? '+' + phone : phone}
+                    value={phone}
                     onChangeText={setPhone}
                     keyboardType="phone-pad"
                     placeholder={t("phoneNumber")}

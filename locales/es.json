@@ -22,5 +22,6 @@
   "birthdate": "Cumpleaños",
   "name": "Nombre",
   "phoneNumber": "Nº Telefono",
-  "messages": "Mensajes"
+  "messages": "Mensajes",
+  "invalidEmail": "Email no válido"
 }

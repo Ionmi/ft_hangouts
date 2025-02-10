@@ -9,14 +9,13 @@ import { IconSymbol } from '../components/ui/IconSymbol';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { SecondaryButton } from '../components/ui/SecondaryButton';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { deleteContact, updateContact } from '../db/sqliteService';
-import { useSQLiteContext } from 'expo-sqlite';
 import ContactForm from '../components/ContactForm';
 import { useState } from 'react';
 import Button from '../components/ui/Button';
 import ParallaxScrollView from '../components/ParallaxScrollView';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
 import { callNumber } from '../modules/sms';
+import { useContacts } from '../contexts/ContactsContext';
 
 
 
@@ -26,10 +25,10 @@ export default function Contact() {
     const textColor = useThemeColor({}, 'text');
     const insets = useSafeAreaInsets();
     const router = useRouter();
-    const db = useSQLiteContext();
     const { t } = useLanguage();
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
+    const { updateContact, deleteContact } = useContacts();
     const { color } = useAccentStyle();
 
     const handleDelete = async () => {
@@ -45,7 +44,7 @@ export default function Contact() {
                     text: t('delete'),
                     style: 'destructive',
                     onPress: async () => {
-                        await deleteContact(db, contact.id!);
+                        await deleteContact(contact.id!);
                         router.back();
                     },
                 },
@@ -56,7 +55,7 @@ export default function Contact() {
 
     const handleUpdate = async (updated: Contact) => {
 
-        await updateContact(db, contact.id!, updated);
+        await updateContact(contact.id!, updated);
         setContact({
             id: contact.id,
             ...updated,
