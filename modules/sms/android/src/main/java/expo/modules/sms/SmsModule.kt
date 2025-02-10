@@ -35,6 +35,16 @@ class SmsModule : Module() {
             }
         }
 
+        AsyncFunction("callNumber") { phoneNumber: String ->
+            try {
+                val intent = Intent(Intent.ACTION_CALL)
+                intent.data = Uri.parse("tel:$phoneNumber")
+                appContext.reactContext?.startActivity(intent)
+            } catch (e: Exception) {
+                throw Exception("Failed to call number", e)
+            }
+        }
+
         AsyncFunction("readSMS") {
             appContext.reactContext?.let { readSms(it) } ?: throw Exception("Context is null")
         }

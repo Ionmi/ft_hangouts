@@ -1,60 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, PermissionsAndroid, Platform, Alert } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
-import * as Sms from '../../modules/sms';
+import { useSms } from '../../contexts/SmsContext';
 
 export default function MessagesScreen() {
   const { t } = useLanguage();
-  const [messages, setMessages] = useState<string[]>([]);
 
-  useEffect(() => {
-    const handleSmsReceived = (event: { sender: string; message: string }) => {
-      console.log('Received SMS event:', event);
-      setMessages(prev => [
-        `From: ${event.sender}, Message: ${event.message}`,
-        ...prev,
-      ]);
-    };
-
-    // Directly use SmsModule.addListener as it is already an EventEmitter.
-    const subscription = Sms.addSmsListener('onSmsReceived', handleSmsReceived);
-    console.log('SMS listener added');
-
-    // Request permissions and fetch SMS messages
-    const requestSmsPermissions = async () => {
-      try {
-        if (Platform.OS === 'android') {
-          const permissions = [
-            PermissionsAndroid.PERMISSIONS.READ_SMS,
-            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-          ];
-          const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
-          const allGranted = permissions.every(
-            permission => grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
-          );
-          if (allGranted) {
-            const smsMessages = await Sms.readSMS();
-            setMessages(smsMessages);
-          } else {
-            Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
-          }
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-
-    requestSmsPermissions();
-
-    return () => {
-      console.log('Cleaning up SMS listener');
-      subscription.remove();
-    };
-  }, [t]);
+  const { messages } = useSms();
 
   return (
     <ParallaxScrollView
