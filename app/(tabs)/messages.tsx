@@ -41,23 +41,7 @@ interface ContactWithMessages {
 export default function MessagesScreen() {
   const { t } = useLanguage();
 
-  const { messages } = useSms();
-  const { contacts } = useContacts();
-
-  const [messagesWithContacts, setMessagesWithContacts] = React.useState<ContactWithMessages[]>([]);
-
-  useEffect(() => {
-    const tmp: ContactWithMessages[] = contacts.map((contact) => {
-      const messagesForContact = messages.filter((message) => message.address === contact.phone);
-      return {
-        contact,
-        messages: messagesForContact,
-      };
-    }).filter((mc) => mc.messages.length > 0);
-
-    setMessagesWithContacts(tmp);
-  }, [messages, contacts]);
-
+  const { contactsWithMessages } = useContacts();
 
   return (
     <ParallaxScrollView
@@ -72,7 +56,7 @@ export default function MessagesScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("messages")}</ThemedText>
       </ThemedView>
-      {messagesWithContacts.map((mc, index) => (
+      {contactsWithMessages.map((mc, index) => (
         <ThemedView key={index}>{ContactCard(mc)}</ThemedView>
       ))}
     </ParallaxScrollView>

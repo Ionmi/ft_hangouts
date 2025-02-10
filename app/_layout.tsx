@@ -66,9 +66,9 @@ export default function RootLayout() {
     <SQLiteProvider databaseName="contacts.db" onInit={migrateDbIfNeeded}>
       <SafeAreaProvider>
         <HeaderStyleProvider>
-          <ContactsProvider>
-            <LanguageProvider>
-              <SmsProvider>
+          <LanguageProvider>
+            <SmsProvider>
+              <ContactsProvider>
                 <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                   <TooltipAlert />
                   <Stack>
@@ -78,9 +78,9 @@ export default function RootLayout() {
                   </Stack>
                   <StatusBar style="auto" />
                 </ThemeProvider>
-              </SmsProvider>
-            </LanguageProvider>
-          </ContactsProvider>
+              </ContactsProvider>
+            </SmsProvider>
+          </LanguageProvider>
         </HeaderStyleProvider>
       </SafeAreaProvider>
     </SQLiteProvider>
