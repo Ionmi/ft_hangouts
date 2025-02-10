@@ -25,6 +25,7 @@ const MAPPING = {
   'plus': 'add',
   'camera': 'photo-camera',
   'message' : 'message',
+  'person': 'person',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

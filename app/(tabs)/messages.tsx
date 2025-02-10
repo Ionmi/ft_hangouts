@@ -5,33 +5,11 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
-import { useSms } from '../../contexts/SmsContext';
 import { Sms } from '../../modules/sms';
 import { Contact } from '../../types/Contact';
 import { useContacts } from '../../contexts/ContactsContext';
 import { Link } from 'expo-router';
-
-const ContactCard = ({ messages, contact }: ContactWithMessages) => {
-  return (
-    <ThemedView>
-      <Link href={{
-        pathname: "/contact",
-        params: {
-          ...contact,
-        }
-      }}>
-        <ThemedView style={styles.contactItem} key={contact.id}>
-          <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
-          <View style={{ flex: 1 }}>
-            <ThemedText type='defaultSemiBold' >{contact.name}</ThemedText>
-            <ThemedText>{messages[messages.length - 1].body}</ThemedText>
-          </View>
-          <IconSymbol name="chevron.right" color="gray" size={16} />
-        </ThemedView>
-      </Link>
-    </ThemedView>
-  );
-}
+import { useAccentStyle } from '../../contexts/HeaderStyleContext';
 
 interface ContactWithMessages {
   contact: Contact;
@@ -39,9 +17,36 @@ interface ContactWithMessages {
 }
 
 export default function MessagesScreen() {
+  const { color } = useAccentStyle();
   const { t } = useLanguage();
-
   const { contactsWithMessages } = useContacts();
+
+  const ContactCard = ({ messages, contact }: ContactWithMessages) => {
+    return (
+      <ThemedView>
+        <Link href={{
+          pathname: "/contact",
+          params: {
+            ...contact,
+          }
+        }}>
+          <ThemedView style={styles.contactItem} key={contact.id}>
+            {contact.photo !== "" ?
+              <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} /> :
+              <IconSymbol name="person" size={60} color="black"
+                style={[styles.photo, { backgroundColor: color }]}
+              />
+            }
+            <View style={{ flex: 1 }}>
+              <ThemedText type='defaultSemiBold' >{contact.name}</ThemedText>
+              <ThemedText>{messages[messages.length - 1].body}</ThemedText>
+            </View>
+            <IconSymbol name="chevron.right" color="gray" size={16} />
+          </ThemedView>
+        </Link>
+      </ThemedView>
+    );
+  }
 
   return (
     <ParallaxScrollView

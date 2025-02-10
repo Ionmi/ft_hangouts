@@ -25,11 +25,6 @@ const ContactsContext = createContext<ContactsContextType | undefined>(undefined
 const addMessagesToContacts = (contacts: Contact[], messages: Sms[]): ContactWithMessages[] => {
     return contacts.map((contact) => {
         const messagesForContact = messages.filter((message) => message.address === contact.phone);
-        const hola = {
-            contact,
-            messages: messagesForContact,
-        };
-        console.log(hola);
         return {
             contact,
             messages: messagesForContact,
@@ -40,7 +35,7 @@ const addMessagesToContacts = (contacts: Contact[], messages: Sms[]): ContactWit
 export const ContactsProvider = ({ children }: { children: ReactNode }) => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [contactsWithMessages, setContactsWithMessages] = useState<ContactWithMessages[]>([]);
-    const { messages } = useSms();
+    const { messages, setMessages } = useSms();
 
     const db = useSQLiteContext();
 
@@ -68,15 +63,14 @@ export const ContactsProvider = ({ children }: { children: ReactNode }) => {
         setContacts(updatedContacts);
     }
 
-
-    useEffect(() => {
-        fetchContacts();
-    }, []);
-
     useEffect(() => {
         const contactsWithMessages = addMessagesToContacts(contacts, messages);
         setContactsWithMessages(contactsWithMessages);
     }, [contacts]);
+
+    useEffect(() => {
+        fetchContacts();
+    }, [messages]);
 
     return (
         <ContactsContext.Provider value={{

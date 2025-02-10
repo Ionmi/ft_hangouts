@@ -1,8 +1,14 @@
 import React, { ReactNode, useEffect } from "react";
 import { addSmsListener, readSMS, Sms } from "../modules/sms";
 import { useLanguage } from "./LanguageContext";
+import { getContacts, saveContact } from "../db/sqliteService";
+import { useSQLiteContext } from "expo-sqlite";
+import { Contact } from "../types/Contact";
 
-const SmsContext = React.createContext<{ messages: Sms[]; setMessages: React.Dispatch<React.SetStateAction<Sms[]>> } | undefined>(undefined);
+const SmsContext = React.createContext<{
+    messages: Sms[];
+    setMessages: React.Dispatch<React.SetStateAction<Sms[]>>;
+} | undefined>(undefined);
 
 interface SmsProviderProps {
     children: ReactNode;
@@ -11,9 +17,26 @@ interface SmsProviderProps {
 export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
     const [messages, setMessages] = React.useState<Sms[]>([]);
     const { t } = useLanguage();
+    const db = useSQLiteContext();
 
     useEffect(() => {
-        const handleSmsReceived = (event: Sms) => setMessages((prev) => [event, ...prev])
+        const handleSmsReceived = async (event: Sms) => {
+            const result = await getContacts(db);
+
+            if (!result.some((contact) => contact.phone === event.address)) {
+                const newContact: Contact = {
+                    name: event.address,
+                    phone: event.address,
+                    email: '',
+                    birthdate: '',
+                    photo: '',
+                };
+
+                await saveContact(db, newContact);
+            }
+
+            setMessages((prev) => [...prev, event]);
+        }
 
         const subscription = addSmsListener('onSmsReceived', handleSmsReceived);
 
