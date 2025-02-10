@@ -14,6 +14,7 @@ import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
 import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDbIfNeeded } from '../db/init';
 import { SmsProvider } from '../contexts/SmsContext';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,6 +30,32 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          const permissions = [
+            PermissionsAndroid.PERMISSIONS.READ_SMS,
+            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+            PermissionsAndroid.PERMISSIONS.SEND_SMS,
+            PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+          ];
+          const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
+          const allGranted = permissions.every(
+            permission => grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
+          );
+          if (!allGranted) {
+            Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+
+    requestPermissions();
+  }, [t]);
 
   if (!loaded) {
     return null;
@@ -56,3 +83,7 @@ export default function RootLayout() {
     </SQLiteProvider>
   );
 }
+function t(arg0: string): string {
+  throw new Error('Function not implemented.');
+}
+

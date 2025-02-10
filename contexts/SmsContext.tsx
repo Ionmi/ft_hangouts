@@ -1,5 +1,4 @@
 import React, { ReactNode, useEffect } from "react";
-import { Platform, PermissionsAndroid, Alert } from "react-native";
 import { addSmsListener, readSMS } from "../modules/sms";
 import { useLanguage } from "./LanguageContext";
 
@@ -22,43 +21,17 @@ export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
             ]);
         };
 
-
         // Directly use SmsModule.addListener as it is already an EventEmitter.
         const subscription = addSmsListener('onSmsReceived', handleSmsReceived);
-        console.log('SMS listener added');
 
-        // Request permissions and fetch SMS messages
-        const requestSmsPermissions = async () => {
-            try {
-                if (Platform.OS === 'android') {
-                    const permissions = [
-                        PermissionsAndroid.PERMISSIONS.READ_SMS,
-                        PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-                    ];
-                    const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
-                    const allGranted = permissions.every(
-                        permission => grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
-                    );
-                    if (allGranted) {
-                        const smsMessages = await readSMS();
-                        setMessages(smsMessages);
-                    } else {
-                        Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
-                    }
-                }
-            } catch (err) {
-                console.warn(err);
-            }
-        };
+        // Read existing SMS messages.
+        readSMS().then(setMessages);
 
-        requestSmsPermissions();
 
         return () => {
-            console.log('Cleaning up SMS listener');
             subscription.remove();
         };
     }, [t]);
-
 
     return (
         <SmsContext.Provider value={{ messages, setMessages }}>
