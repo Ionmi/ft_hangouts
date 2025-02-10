@@ -21,7 +21,8 @@
       "permissions": [
         "RECEIVE_SMS",
         "READ_SMS",
-        "SEND_SMS"
+        "SEND_SMS",
+        "CALL_PHONE"
       ]
     },
     "web": {

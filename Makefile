@@ -12,6 +12,9 @@ start:
 install:
 	bunx expo install
 
+export:
+	export ANDROID_HOME=/Users/ionmi/Library/Android/sdk
+
 upgrade:
 	bunx expo install --fix
 
@@ -22,7 +25,7 @@ clean_andorid:
 clean:
 	rm -rf node_modules
 
-.PHONY: all start install clean upgrade
+.PHONY: all start install clean upgrade clean_andorid re export
 
 # expo prebuild --clean
 # expo start --clear

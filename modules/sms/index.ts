@@ -17,3 +17,7 @@ export async function readSMS(): Promise<string[]> {
 export async function sendSMS(phoneNumber: string, message: string): Promise<boolean> {
     return SmsModule.sendSMS(phoneNumber, message);
 }
+
+export async function callNumber(phoneNumber: string): Promise<boolean> {
+    return SmsModule.callNumber(phoneNumber);
+}

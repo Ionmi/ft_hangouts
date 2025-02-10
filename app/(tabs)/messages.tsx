@@ -5,7 +5,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
-import { useEventListener } from 'expo';
 import * as Sms from '../../modules/sms';
 
 export default function MessagesScreen() {

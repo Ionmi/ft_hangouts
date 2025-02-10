@@ -16,6 +16,8 @@ import { useState } from 'react';
 import Button from '../components/ui/Button';
 import ParallaxScrollView from '../components/ParallaxScrollView';
 import { useAccentStyle } from '../contexts/HeaderStyleContext';
+import { callNumber } from '../modules/sms';
+
 
 
 
@@ -29,10 +31,6 @@ export default function Contact() {
     const [modalVisible, setModalVisible] = useState(false);
     const [contact, setContact] = useState<Contact>(params as unknown as Contact);
     const { color } = useAccentStyle();
-
-    const callNumber = (phoneNumber: string) => {
-        Linking.openURL(`tel:+${phoneNumber}`);
-    };
 
     const handleDelete = async () => {
         Alert.alert(
