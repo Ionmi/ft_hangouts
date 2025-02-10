@@ -21,7 +21,7 @@ const ContactCard = ({ contact }: { contact: Contact }) => {
                 <ThemedView style={styles.contactItem} key={contact.id}>
                     <Image source={{ uri: contact.photo } as ImageURISource} style={styles.photo} />
                     <View style={{ flex: 1 }}>
-                        <ThemedText>{contact.name}</ThemedText>
+                        <ThemedText type="defaultSemiBold">{contact.name}</ThemedText>
                         <ThemedText>+{contact.phone}</ThemedText>
                     </View>
                     <IconSymbol name="chevron.right" color="gray" size={16} />
