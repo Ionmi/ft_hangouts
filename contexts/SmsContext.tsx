@@ -35,7 +35,7 @@ export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
                 await saveContact(db, newContact);
             }
 
-            setMessages((prev) => [...prev, event]);
+            setMessages((prev) => [event, ...prev]);
         }
 
         const subscription = addSmsListener('onSmsReceived', handleSmsReceived);

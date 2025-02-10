@@ -39,7 +39,7 @@ export default function MessagesScreen() {
             }
             <View style={{ flex: 1 }}>
               <ThemedText type='defaultSemiBold' >{contact.name}</ThemedText>
-              <ThemedText>{messages[messages.length - 1].body}</ThemedText>
+              <ThemedText>{messages[0].body}</ThemedText>
             </View>
             <IconSymbol name="chevron.right" color="gray" size={16} />
           </ThemedView>
