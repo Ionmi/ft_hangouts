@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import React, { useEffect } from 'react';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
@@ -11,6 +11,32 @@ export default function TabLayout() {
   const { color: accentColor } = useAccentStyle();
   const { t } = useLanguage();
 
+  useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          const permissions = [
+            PermissionsAndroid.PERMISSIONS.READ_SMS,
+            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+            PermissionsAndroid.PERMISSIONS.SEND_SMS,
+            PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+          ];
+          const grantedPermissions = await PermissionsAndroid.requestMultiple(permissions);
+          const allGranted = permissions.every(
+            permission => grantedPermissions[permission] === PermissionsAndroid.RESULTS.GRANTED
+          );
+          if (!allGranted) {
+            Alert.alert(t("permissionDeniedTitle"), t("permissionDeniedMessage"));
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+
+    requestPermissions();
+  }, [t]);
+
   return (
 
     <Tabs
@@ -19,7 +45,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        
+
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
