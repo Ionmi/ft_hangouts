@@ -8,10 +8,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.ft-hangouts"
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/42.png",
@@ -24,11 +20,6 @@
         "SEND_SMS",
         "CALL_PHONE"
       ]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/42.png"
     },
     "plugins": [
       "expo-router",

@@ -25,10 +25,6 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
       );
     `);
 
-        // Example: Insert some sample data for testing
-        await db.runAsync('INSERT INTO contacts (name, phone, email, birthdate, photo) VALUES (?, ?, ?, ?, ?)',
-            ['John Doe', '1234567890', 'john@example.com', '1990-01-01', null]);
-
         currentDbVersion = 1;  // Update the version after migration
     }
 
