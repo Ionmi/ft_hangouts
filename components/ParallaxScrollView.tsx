@@ -31,8 +31,8 @@ export default function ParallaxScrollView({
   const bottom = useBottomTabOverflow();
   const { color } = useAccentStyle();
   const windowDimensions = Dimensions.get('window');
-  const extraHeight = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
-  const availableHeight = windowDimensions.height - extraHeight;
+  const extraHeight = StatusBar.currentHeight || 0;
+  const availableHeight = windowDimensions.height + extraHeight;
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
