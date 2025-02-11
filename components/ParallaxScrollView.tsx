@@ -32,7 +32,7 @@ export default function ParallaxScrollView({
   const { color } = useAccentStyle();
   const windowDimensions = Dimensions.get('window');
   const extraHeight = StatusBar.currentHeight || 0;
-  const availableHeight = windowDimensions.height + extraHeight;
+  const availableHeight = windowDimensions.height - extraHeight;
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {

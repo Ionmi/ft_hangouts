@@ -7,9 +7,8 @@ import Button from "../components/ui/Button";
 import { IconSymbol } from "../components/ui/IconSymbol";
 import { View, StyleSheet, TextInput, FlatList, KeyboardAvoidingView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Contact } from "../types/Contact";
-import { ThemedSafeArea } from "../components/ThemedSafeArea";
 import { useContacts } from "../contexts/ContactsContext";
 import { sendSMS, Sms } from "../modules/sms";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -24,17 +23,19 @@ export default function Chat() {
     const [inputText, setInputText] = useState('');
     const { t } = useLanguage();
     const insets = useSafeAreaInsets();
+    const flatListRef = useRef<FlatList<Sms>>(null);
 
     useEffect(() => {
         setMessages((contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages) || []);
     }, [contactsWithMessages]);
 
     const sendMessage = () => {
-        if (!inputText.trim()) return
-        if (!sendSMS(contact.phone, inputText)) return
+        if (!inputText.trim()) return;
+        if (!sendSMS(contact.phone, inputText)) return;
         setInputText('');
-        setMessages([...messages, { body: inputText, address: 'user', date: new Date().getTime() }]);
-
+        const newMessage = { body: inputText, address: 'user', date: new Date().getTime() };
+        setMessages([...messages, newMessage]);
+        flatListRef.current?.scrollToOffset({ animated: true, offset: messages.length * 1000 });
     };
 
     return (
@@ -53,6 +54,7 @@ export default function Chat() {
                 keyboardVerticalOffset={20}
             >
                 <FlatList
+                    ref={flatListRef}
                     data={messages.sort((a, b) => a.date - b.date)}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
