@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
   const handleFormSubmit = async (contact: Contact) => {
     try {
-      await saveContact( contact);
+      await saveContact(contact);
       setModalVisible(false);
     } catch (error) {
       console.error("Error saving contact: ", error);
@@ -30,14 +30,13 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView
       header={<Image source={require('@/assets/images/42.png')} style={styles.ftLogo} />}
-      nestedScrollEnabled={true}
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t("contacts")}</ThemedText>
         {/* <HelloWave /> */}
         <ThemedView style={{ flex: 1 }} />
         <Button onPress={() => setModalVisible(true)}>
-          <IconSymbol name="plus" size={24} color={color} />
+          <IconSymbol name="plus" size={20} color={color} />
         </Button>
       </ThemedView>
 
@@ -74,8 +73,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 45,
     gap: 8,
-    marginBottom: 16,
   },
   contactItem: {
     marginBottom: 12,

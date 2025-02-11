@@ -41,3 +41,7 @@ android {
     abortOnError false
   }
 }
+
+dependencies {
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.49'
+}

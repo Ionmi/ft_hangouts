@@ -22,20 +22,23 @@ interface ContactsContextType {
 
 const ContactsContext = createContext<ContactsContextType | undefined>(undefined);
 
+const trimPhone = (phone: string) => phone.trim().replace(/[+\s]/g, '');
+
 const addMessagesToContacts = (contacts: Contact[], messages: Sms[]): ContactWithMessages[] => {
-    return contacts.map((contact) => {
-        const messagesForContact = messages.filter((message) => message.address === contact.phone);
+    return contacts.map((contact) => {        
+        const trimmedPhone = contact.phone.trim().replace(/[+\s]/g, '');
+        const messagesForContact = messages.filter((message) => trimPhone(message.address) === trimmedPhone);
+
         return {
             contact,
             messages: messagesForContact,
         };
     }).filter((contact) => contact.messages.length > 0);
 };
-
 export const ContactsProvider = ({ children }: { children: ReactNode }) => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [contactsWithMessages, setContactsWithMessages] = useState<ContactWithMessages[]>([]);
-    const { messages, setMessages } = useSms();
+    const { messages } = useSms();
 
     const db = useSQLiteContext();
 

@@ -25,7 +25,7 @@ export default function MessagesScreen() {
     return (
       <ThemedView>
         <Link href={{
-          pathname: "/contact",
+          pathname: "/chat",
           params: {
             ...contact,
           }
@@ -88,6 +88,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    height: 45,
     gap: 8,
   },
   messageContainer: {

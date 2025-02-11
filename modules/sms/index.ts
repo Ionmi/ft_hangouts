@@ -15,7 +15,11 @@ export async function readSMS(): Promise<Sms[]> {
 }
 
 export async function sendSMS(phoneNumber: string, message: string): Promise<boolean> {
-    return SmsModule.sendSMS(phoneNumber, message);
+    try {
+        return SmsModule.sendSMS(phoneNumber, message);
+    } catch (error) {
+        return false;
+    }
 }
 
 export async function callNumber(phoneNumber: string): Promise<boolean> {

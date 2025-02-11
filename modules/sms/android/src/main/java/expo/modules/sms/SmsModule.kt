@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
 import android.telephony.SmsMessage
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -21,16 +24,17 @@ class SmsModule : Module() {
 
         AsyncFunction("sendSMS") { phoneNumber: String, message: String ->
             try {
-                val fixedPhoneNumber =
-                    if (!phoneNumber.startsWith("+")) {
-                        "+$phoneNumber"
-                    } else {
-                        phoneNumber
-                    }
+                val fixedPhoneNumber = if (!phoneNumber.startsWith("+")) {
+                    "+$phoneNumber"
+                } else {
+                    phoneNumber
+                }
 
+                android.util.Log.d("SmsModule", "Sending SMS to $fixedPhoneNumber")
                 val smsManager = android.telephony.SmsManager.getDefault()
                 smsManager.sendTextMessage(fixedPhoneNumber, null, message, null, null)
             } catch (e: Exception) {
+                android.util.Log.e("SmsModule", "Failed to send SMS", e)
                 throw Exception("Failed to send SMS", e)
             }
         }
@@ -61,21 +65,38 @@ class SmsModule : Module() {
     }
 
     private fun readSms(context: Context): List<Map<String, String>> {
-    val smsList = mutableListOf<Map<String, String>>()
-    val uri = Uri.parse("content://sms/inbox")
-    val cursor = context.contentResolver.query(uri, null, null, null, null)
+        val smsList = mutableListOf<Map<String, String>>()
+        val uri = Uri.parse("content://sms/inbox")
+        val projection = arrayOf("address", "body", "date")
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
 
-    cursor?.use {
-        if (it.moveToFirst()) {
-            do {
-                val address = it.getString(it.getColumnIndex("address"))
-                val body = it.getString(it.getColumnIndex("body"))
-                val date = it.getString(it.getColumnIndex("date"))
-                val json = mapOf("address" to address, "body" to body, "date" to date)
-                smsList.add(json)
-            } while (it.moveToNext())
+        cursor?.use {
+            if (it.moveToFirst()) {
+                do {
+                    val address = it.getString(it.getColumnIndexOrThrow("address"))
+                    val body = it.getString(it.getColumnIndexOrThrow("body"))
+                    val date = it.getString(it.getColumnIndexOrThrow("date"))
+
+                    val cleanedAddress = removeCountryCode(address)
+                    val smsData = mapOf("address" to cleanedAddress, "body" to body, "date" to date)
+                    smsList.add(smsData)
+                } while (it.moveToNext())
+            }
+        }
+        return smsList
+    }
+
+    private fun removeCountryCode(phoneNumber: String?): String {
+        if (phoneNumber.isNullOrEmpty()) return ""
+
+        val phoneUtil = PhoneNumberUtil.getInstance()
+        try {
+            val numberProto = phoneUtil.parse(phoneNumber, "")
+            val nationalNumber = numberProto.nationalNumber
+            return nationalNumber.toString()
+        } catch (e: NumberParseException) {
+            android.util.Log.e("PhoneNumberParse", "Error parsing number: $phoneNumber", e)
+            return phoneNumber
         }
     }
-    return smsList
-}
 }

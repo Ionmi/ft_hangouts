@@ -74,9 +74,10 @@ export default function RootLayout() {
                   <Stack>
                     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                     <Stack.Screen name="contact" options={{ headerShown: false }} />
+                    <Stack.Screen name="chat" />
                     <Stack.Screen name="+not-found" />
                   </Stack>
-                  <StatusBar style="auto" />
+                  <StatusBar style='auto' />
                 </ThemeProvider>
               </ContactsProvider>
             </SmsProvider>

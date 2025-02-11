@@ -1,5 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StyleSheet, Image, ImageURISource, Modal, View, Alert, Linking } from 'react-native';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import { StyleSheet, Image, ImageURISource, Modal, View, Alert } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type Contact } from '../types/Contact';
 import { useThemeColor } from '../hooks/useThemeColor';
@@ -128,7 +128,14 @@ export default function Contact() {
                 <ThemedText type='defaultSemiBold' style={[styles.birthdate, { color: textColor }]}>{contact.birthdate}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
-                <PrimaryButton style={[styles.actionButton]} onPress={() => { }} text={t("message")} icon='message.fill' />
+                <PrimaryButton style={[styles.actionButton]} onPress={() => {
+                    router.push({
+                        pathname: "/chat",
+                        params: {
+                            ...contact,
+                        }
+                    });
+                }} text={t("message")} icon='message.fill' />
                 <SecondaryButton style={[styles.actionButton]} onPress={() => {
                     callNumber(contact.phone);
                 }} text={t("call")} icon='phone.fill' />
