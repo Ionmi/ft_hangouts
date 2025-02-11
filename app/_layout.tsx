@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import TooltipAlert from '../components/TooltipAlert';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { HeaderStyleProvider } from '../contexts/HeaderStyleContext';
@@ -22,6 +22,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useLanguage();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -87,7 +88,3 @@ export default function RootLayout() {
     </SQLiteProvider>
   );
 }
-function t(arg0: string): string {
-  throw new Error('Function not implemented.');
-}
-

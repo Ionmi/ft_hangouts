@@ -23,5 +23,7 @@
   "name": "Nombre",
   "phoneNumber": "Nº Telefono",
   "messages": "Mensajes",
-  "invalidEmail": "Email no válido"
+  "invalidEmail": "Email no válido",
+  "permissionDeniedTitle": "No hay permisos",
+  "permissionDeniedMessage": "Los permisos han sido denegados"
 }
