@@ -33,7 +33,7 @@ export default function Chat() {
         if (!inputText.trim()) return;
         if (!sendSMS(contact.phone, inputText)) return;
         setInputText('');
-        const newMessage = { body: inputText, address: 'user', date: new Date().getTime() };
+        const newMessage: Sms = { body: inputText, address: 'user', date: new Date().getTime(), type: 'sent' };
         setMessages([...messages, newMessage]);
         flatListRef.current?.scrollToOffset({ animated: true, offset: messages.length * 1000 });
     };
@@ -58,7 +58,7 @@ export default function Chat() {
                     data={messages.sort((a, b) => a.date - b.date)}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <View style={[styles.messageContainer, item.address === 'user' ? styles.userMessage : styles.contactMessage]}>
+                        <View style={[styles.messageContainer, item.type === "sent" ? styles.userMessage : styles.contactMessage]}>
                             <ThemedText style={styles.messageText}>{item.body}</ThemedText>
                         </View>
                     )}

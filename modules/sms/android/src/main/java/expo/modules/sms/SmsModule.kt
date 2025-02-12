@@ -72,13 +72,15 @@ class SmsModule : Module() {
         }
     }
 
-    private fun readSms(context: Context): List<Map<String, String>> {
+   private fun readSms(context: Context): List<Map<String, String>> {
         val smsList = mutableListOf<Map<String, String>>()
-        val uri = Uri.parse("content://sms/inbox")
-        val projection = arrayOf("address", "body", "date")
-        val cursor = context.contentResolver.query(uri, projection, null, null, null)
 
-        cursor?.use {
+        // Read inbox messages
+        val inboxUri = Uri.parse("content://sms/inbox")
+        val projection = arrayOf("address", "body", "date")
+        val inboxCursor = context.contentResolver.query(inboxUri, projection, null, null, null)
+
+        inboxCursor?.use {
             if (it.moveToFirst()) {
                 do {
                     val address = it.getString(it.getColumnIndexOrThrow("address"))
@@ -86,11 +88,39 @@ class SmsModule : Module() {
                     val date = it.getString(it.getColumnIndexOrThrow("date"))
 
                     val cleanedAddress = removeCountryCode(address)
-                    val smsData = mapOf("address" to cleanedAddress, "body" to body, "date" to date)
+                    val smsData = mapOf(
+                        "address" to cleanedAddress,
+                        "body" to body,
+                        "date" to date,
+                        "type" to "received"
+                    )
                     smsList.add(smsData)
                 } while (it.moveToNext())
             }
         }
+
+        // Read sent messages
+        val sentUri = Uri.parse("content://sms/sent")
+        val sentCursor = context.contentResolver.query(sentUri, projection, null, null, null)
+
+        sentCursor?.use {
+            if (it.moveToFirst()) {
+                do {
+                    val address = it.getString(it.getColumnIndexOrThrow("address"))
+                    val body = it.getString(it.getColumnIndexOrThrow("body"))
+                    val date = it.getString(it.getColumnIndexOrThrow("date"))
+
+                    val smsData = mapOf(
+                        "address" to address,
+                        "body" to body,
+                        "date" to date,
+                        "type" to "sent"
+                    )
+                    smsList.add(smsData)
+                } while (it.moveToNext())
+            }
+        }
+
         return smsList
     }
 

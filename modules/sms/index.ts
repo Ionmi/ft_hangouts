@@ -1,7 +1,7 @@
 import { EventSubscription } from 'expo-modules-core';
 import SmsModule from './src/SmsModule';
 
-export type Sms = { address: string; body: string, date: number };
+export type Sms = { address: string; body: string, date: number, type: "sent" | "received" };
 
 export function addSmsListener(
     eventName: 'onSmsReceived',
