@@ -40,11 +40,19 @@ class SmsModule : Module() {
         }
 
         AsyncFunction("callNumber") { phoneNumber: String ->
+            android.util.Log.d("SmsModule", "Calling to $phoneNumber")
             try {
+                val fixedPhoneNumber = if (!phoneNumber.startsWith("+")) {
+                    "+$phoneNumber"
+                } else {
+                    phoneNumber
+                }
                 val intent = Intent(Intent.ACTION_CALL)
-                intent.data = Uri.parse("tel:$phoneNumber")
+                intent.data = Uri.parse("tel:$fixedPhoneNumber")
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 appContext.reactContext?.startActivity(intent)
             } catch (e: Exception) {
+                android.util.Log.e("SmsModule", "Failed to call number", e)
                 throw Exception("Failed to call number", e)
             }
         }
