@@ -40,11 +40,7 @@ export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
 
         const subscription = addSmsListener('onSmsReceived', handleSmsReceived);
 
-        readSMS().then(setMessages).then(() => {
-            console.log('Messages loaded');
-            console.log(messages);
-        });
-
+        readSMS().then(setMessages)
 
 
         return () => {
