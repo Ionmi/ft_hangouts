@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useAccentStyle } from "../contexts/HeaderStyleContext";
 import { useThemeColor } from "../hooks/useThemeColor";
 import { ThemedView } from "../components/ThemedView";
@@ -17,7 +17,7 @@ export default function Chat() {
     const params = useLocalSearchParams();
     const textColor = useThemeColor({}, 'text');
     const { color } = useAccentStyle();
-    const [contact, setContact] = useState<Contact>(params as unknown as Contact);
+    const [contact] = useState<Contact>(params as unknown as Contact);
     const { contactsWithMessages } = useContacts();
     const [messages, setMessages] = useState<Sms[]>(contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages || []);
     const [inputText, setInputText] = useState('');
@@ -26,14 +26,22 @@ export default function Chat() {
     const flatListRef = useRef<FlatList<Sms>>(null);
 
     useEffect(() => {
-        setMessages((contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages) || []);
+        setMessages((prevMessages) => {
+            const newMessages = contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages || [];
+            const updatedMessages = [...prevMessages, ...newMessages].filter(
+                (msg, index, self) =>
+                    index === self.findIndex((m) => m.date === msg.date)
+            ).sort((a, b) => a.date - b.date);
+            return updatedMessages;
+        });
     }, [contactsWithMessages]);
-
+    
     const sendMessage = () => {
         if (!inputText.trim()) return;
         if (!sendSMS(contact.phone, inputText)) return;
         setInputText('');
-        const newMessage: Sms = { body: inputText, address: 'user', date: new Date().getTime(), type: 'sent' };
+        const utcDate = new Date().getTime(); // Get current time in UTC
+        const newMessage: Sms = { body: inputText, address: 'user', date: utcDate, type: 'sent' };
         setMessages([...messages, newMessage]);
         flatListRef.current?.scrollToOffset({ animated: true, offset: messages.length * 1000 });
     };

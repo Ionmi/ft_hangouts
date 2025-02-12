@@ -23,9 +23,10 @@ class SmsReceiver() : BroadcastReceiver() {
                     val address = smsMessage.displayOriginatingAddress
                     val messageBody = smsMessage.messageBody
                     val date = smsMessage.timestampMillis
+                    val type =  "received"
                     // Asegurar que module está inicializado antes de usarlo
                     if (::module.isInitialized) {
-                        module.sendEvent("onSmsReceived", mapOf("address" to address, "body" to messageBody, "date" to date))
+                        module.sendEvent("onSmsReceived", mapOf("address" to address, "body" to messageBody, "date" to date, "type" to type))
                     }
                 }
             }
