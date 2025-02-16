@@ -8,6 +8,7 @@ import { Contact } from "../types/Contact";
 const SmsContext = React.createContext<{
     messages: Sms[];
     setMessages: React.Dispatch<React.SetStateAction<Sms[]>>;
+    readMessages: () => Promise<void>;
 } | undefined>(undefined);
 
 interface SmsProviderProps {
@@ -48,8 +49,13 @@ export const SmsProvider: React.FC<SmsProviderProps> = ({ children }) => {
         };
     }, [t]);
 
+    const readMessages = async () => {
+        const updatedMessages = await readSMS();
+        setMessages(updatedMessages);
+    }
+
     return (
-        <SmsContext.Provider value={{ messages, setMessages }}>
+        <SmsContext.Provider value={{ messages, setMessages, readMessages }}>
             {children}
         </SmsContext.Provider>
     );

@@ -12,6 +12,7 @@ import { Contact } from "../types/Contact";
 import { useContacts } from "../contexts/ContactsContext";
 import { sendSMS, Sms } from "../modules/sms";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSms } from "../contexts/SmsContext";
 
 export default function Chat() {
     const params = useLocalSearchParams();
@@ -24,26 +25,19 @@ export default function Chat() {
     const { t } = useLanguage();
     const insets = useSafeAreaInsets();
     const flatListRef = useRef<FlatList<Sms>>(null);
+    const { readMessages } = useSms();
 
     useEffect(() => {
-        setMessages((prevMessages) => {
-            const newMessages = contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages || [];
-            const updatedMessages = [...prevMessages, ...newMessages].filter(
-                (msg, index, self) =>
-                    index === self.findIndex((m) => m.date === msg.date)
-            ).sort((a, b) => a.date - b.date);
-            return updatedMessages;
-        });
+        setMessages(contactsWithMessages.find((c) => c.contact.id == contact.id)?.messages || []);
+        flatListRef.current?.scrollToOffset({ animated: true, offset: messages.length * 1000 });
+
     }, [contactsWithMessages]);
-    
-    const sendMessage = () => {
+
+    const sendMessage = async () => {
         if (!inputText.trim()) return;
         if (!sendSMS(contact.phone, inputText)) return;
         setInputText('');
-        const utcDate = new Date().getTime(); // Get current time in UTC
-        const newMessage: Sms = { body: inputText, address: 'user', date: utcDate, type: 'sent' };
-        setMessages([...messages, newMessage]);
-        flatListRef.current?.scrollToOffset({ animated: true, offset: messages.length * 1000 });
+        await readMessages();
     };
 
     return (
